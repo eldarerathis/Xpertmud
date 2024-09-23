@@ -3,7 +3,12 @@
 #define XM_PYTHON_H
 
 #include <cmath>
-#include <Python.h>
+// This is necessary to prevent conflicts between Qt's 'slots'
+// definition and the one in Python.h 
+#pragma push_macro("slots")
+#undef slots
+#include "Python.h"
+#pragma pop_macro("slots")
 #include "../Scripting.h"
 
 

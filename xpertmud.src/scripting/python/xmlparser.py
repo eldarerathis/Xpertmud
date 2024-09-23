@@ -19,12 +19,12 @@ class XMXmlNode:
         return self.attributes[name]
 
     def hasAttribute(self, name):
-        return self.attributes.has_key(name)
+        return name in self.attributes
 
     def getChildTagNames(self):
         ret = []
         for child in self.childs:
-            if (type(child) != unicode and
+            if (type(child) != str and
                 not child.getTagName() in ret):
                 ret.append(child.getTagName())
         return ret
@@ -33,18 +33,15 @@ class XMXmlNode:
         self.childs.remove(child)
 
     def addChild(self, child):
-        if type(child) == unicode and child == "":
+        if type(child) == str and child == "":
             return
 
-        if (type(child) == unicode and len(self.childs) > 0 and
-            type(self.childs[len(self.childs)-1]) == unicode):
+        if (type(child) == str and len(self.childs) > 0 and
+            type(self.childs[len(self.childs)-1]) == str):
             self.childs[len(self.childs)-1] += child
             return
             
-        if type(child) == str:
-            raise "Child must be unicode"
-        else:
-            self.childs.append(child)
+        self.childs.append(child)
 
     def getChilds(self):
         return self.childs
@@ -52,7 +49,7 @@ class XMXmlNode:
     def getSubNodes(self, name=""):
         ret = []
         for child in self.childs:
-            if type(child) != unicode and (name == "" or
+            if type(child) != str and (name == "" or
                                            name == child.getTagName()):
                 ret.append(child)
         return ret
@@ -64,7 +61,7 @@ class XMXmlNode:
         ret = u""
         for char in s:
             if ord(char) <= 6 or ord(char) > 255:
-                ret += "&#" + unicode(ord(char)) + ";"
+                ret += "&#" + str(ord(char)) + ";"
             elif char == u"&":
                 ret += u"&amp;"
             elif char == u"<":
@@ -85,7 +82,7 @@ class XMXmlNode:
         if len(self.childs) > 0:
             s += ">"
             for child in self.childs:
-                if type(child) == unicode:
+                if type(child) == str:
                     s += self.escape(child)
                 else:
                     s += child.toString(indent + " ")
@@ -101,12 +98,12 @@ class XMXmlDTDTag:
         self.name = name
 
     def addAttribute(self, name, value):
-        if not self.attributes.has_key(name):
+        if not name in self.attributes:
             self.attributes[name] = []
         self.attributes[name].append(value)
 
     def getDefault(self, name):
-        if not self.attributes.has_key(name):
+        if not name in self.attributes:
             return u""
         return self.attributes[name][0]
 
@@ -124,7 +121,7 @@ class XMXmlDTD:
         self.tags[tag.getName()] = tag
 
     def getTag(self, name):
-        if not self.tags.has_key(name):
+        if not name in self.tags:
             return XMXmlDTDTag(name)
         return self.tags[name]
 
@@ -146,7 +143,7 @@ class XMXmlParser:
 
     def entity(self, name):
         if name == "amp":
-	    return "&"
+            return "&"
         elif name == "lt":
             return "<"
         elif name == "gt":
@@ -154,7 +151,7 @@ class XMXmlParser:
         elif name == "quot":
             return '"'
         elif len(name) > 0 and name[0] == '#':
-            return unichr(int(name[1:]))
+            return chr(int(name[1:]))
         return ""
 
     def isSpace(self, char):
@@ -191,7 +188,7 @@ class XMXmlParser:
         if self.file != '':
             s += self.file + ": "
         s += "(%d, %d) - %s" % (self.lineno, self.column, description)
-        raise s
+        raise Exception(s)
 
     def parseChild(self, char):
 #        sys.stderr.write("BUFFER: \"" + self.buffer + "\"\n")
@@ -365,5 +362,5 @@ class XMXmlParser:
         f = open(file, 'r')
         line = f.readline()
         while line != "":
-            self.parse(unicode(line))
+            self.parse(str(line))
             line = f.readline()

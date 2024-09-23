@@ -1,7 +1,7 @@
 #include "IacHandlerCollection.h"
 
 #include <arpa/telnet.h>
-extern char* telopts[];
+extern const char* telopts[];
 
 #include <iostream>
 using std::cout;

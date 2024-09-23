@@ -36,7 +36,7 @@ while line != "":
             pythonForwardArgs = "self.getID(),"
             pythonSelfArgs = "self,"
             pythonClass = 'XM' + classMatch.group(1)
-            if not classDefs.has_key(pythonClass):
+            if not pythonClass in classDefs:
                 classDefs[pythonClass] = ""
             pythonFunction = classMatch.group(2)
 
@@ -56,7 +56,7 @@ while line != "":
             line = reS.string
             m = re.match(r'^(.*)\s+([^\s]+)$', reS.match.group(1))
             if m == None:
-                print "ERROR: " + origLine
+                print("ERROR: " + origLine)
             type = m.group(1)
             type = re.sub(r'const QString&', 'PyObject*', type)
             name = m.group(2)

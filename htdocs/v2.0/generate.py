@@ -7,14 +7,14 @@ uppern = sys.argv[2]
 lowern = sys.argv[3]
 title = sys.argv[4]
 
-print "file name : " + fn
-print "upper     : " + uppern
-print "lower     : " + lowern
-print "title     : " + title
+print("file name : " + fn)
+print("upper     : " + uppern)
+print("lower     : " + lowern)
+print("title     : " + title)
 
 middlen = re.sub(r'\.html', r'-m.html', fn)
 
-print "middle    : " + middlen
+print("middle    : " + middlen)
 
 f = open(fn, 'w')
 
@@ -22,10 +22,10 @@ middle = open(middlen, 'r')
 line = middle.readline()
 while line != "":
     if re.match(r'^<!-- TITLE -->', line) != None:
-        print "writing title ..."
+        print("writing title ...")
         f.write("<title>" + title + "</title>\n")
     elif re.match(r'^<!-- UPPER -->', line) != None:
-        print "writing upper ..."
+        print("writing upper ...")
         upper = open(uppern, 'r')
         uline = upper.readline()
         while uline != "":
@@ -43,7 +43,7 @@ while line != "":
             uline = upper.readline()
         upper.close()
     elif re.match(r'^<!-- LOWER -->', line) != None:
-        print "writing lower ..."
+        print("writing lower ...")
         lower = open(lowern, 'r')
         lline = lower.readline()
         while lline != "":

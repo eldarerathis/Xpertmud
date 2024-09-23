@@ -88,16 +88,30 @@ class KLibLoader {
     QStringList list = KGlobal::dirs()->findAllResources("module", name, false, true);
     if(list.count() == 0) { 
       cout << "Couldn't find library " << name.toLocal8Bit().data() << endl;
+      lastError = QString("Couldn't find library");
       return 0; 
     }
-    //cout << list.first().toLocal8Bit().data() << endl;
     
     QString function = QString("init_") + libname;
     cout << "QLibrary::resolve('" << list.first().toLocal8Bit().data() << "', '" << function.toLatin1().data() << "');" << endl;
-    QFunctionPointer symAddr = QLibrary::resolve(list.first(), function.toLatin1().data());
+    QLibrary lib(list.first().toLocal8Bit().data());
+
+    if (!lib.load())
+    {
+      lastError = lib.errorString();
+      return 0; 
+    }
+    
+    QFunctionPointer symAddr = lib.resolve(function.toLatin1().data());
     //void *symAddr = QLibrary::resolve(list.first(), function.toLocal8Bit().data());
 
-    if(symAddr == NULL) { cout << "Can't load library or resolve func" << endl; return 0; }
+    if(symAddr == NULL) { 
+      cout << "Can't load library or resolve func" << endl; 
+      lastError = QString("Can't load library or resolve func");
+      lastError.append(QString("\n"));
+      lastError.append(QString(name));
+      return 0; 
+    }
     
     KLibFactory* fac = ((KLibFactory* (*)())symAddr)();
     if (fac!=NULL) {
@@ -110,11 +124,12 @@ class KLibLoader {
 
   QString lastErrorMessage() {
     //TODO: add support for error messages
-    return "";
+    return lastError;
   }
  private:
-  KLibLoader() {}
+  KLibLoader() { lastError = QString(""); }
   static KLibLoader* instance;
+  QString lastError;
 };
 
 

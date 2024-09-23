@@ -1,4 +1,4 @@
-cmake_minimum_required ( VERSION 3.0.2 )
+cmake_minimum_required ( VERSION 3.5 )
 
 if(POLICY CMP0042)
     cmake_policy(SET CMP0042 NEW)
@@ -8,7 +8,7 @@ if(POLICY CMP0071)
     cmake_policy(SET CMP0071 NEW)
 endif()
 
-project(xmpythoninterpreter)
+project(libxmpythoninterpreter)
 
 file (GLOB HDR
         XMPython.h
@@ -29,7 +29,7 @@ include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../)
-include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(${Python_INCLUDE_DIRS})
 
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/AutoSysinit.py
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/createCallbacks.py ${CMAKE_CURRENT_SOURCE_DIR}/sysinit_py.in < ${CMAKE_CURRENT_SOURCE_DIR}/../GuiScriptingBindings.h > ${CMAKE_BINARY_DIR}/AutoSysinit.py
@@ -46,9 +46,9 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/AutoXMPython.cc
 
 add_library(${PROJECT_NAME} SHARED ${SRCS} ${HDR} ${CMAKE_BINARY_DIR}/sysinit_pyf.h ${CMAKE_BINARY_DIR}/AutoXMPython.cc)
 if (APPLE)
-    target_link_libraries(${PROJECT_NAME} Qt5::Widgets util pthread ${PYTHON_LIBRARY})
+    target_link_libraries(${PROJECT_NAME} Qt5::Widgets util pthread ${Python_LIBRARY_RELEASE})
 else (APPLE)
-    target_link_libraries(${PROJECT_NAME} Qt5::Widgets ${PYTHON_LIBRARY})
+    target_link_libraries(${PROJECT_NAME} Qt5::Widgets ${Python_LIBRARY_RELEASE})
 endif (APPLE)
 
 

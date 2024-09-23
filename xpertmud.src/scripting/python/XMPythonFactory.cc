@@ -23,7 +23,7 @@ QObject* XMPythonFactory::createObject(QObject* parent,
   return new XMPython(parent,name);
 } 
 
-K_EXPORT_COMPONENT_FACTORY(libxmpythoninterpreter,XMPythonFactory)
-
+//K_EXPORT_COMPONENT_FACTORY(libxmpythoninterpreter,XMPythonFactory)
+extern "C" { __declspec(dllexport) void *init_libxmpythoninterpreter() { return new XMPythonFactory; } }
 
 // KInstance *XMPythonFactory::s_instance = 0L;

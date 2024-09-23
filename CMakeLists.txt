@@ -1,4 +1,4 @@
-cmake_minimum_required ( VERSION 3.0.2 )
+cmake_minimum_required ( VERSION 3.5 )
 
 if(POLICY CMP0020)
     cmake_policy(SET CMP0020 NEW)
@@ -120,7 +120,7 @@ set(MAIN_PROJ_NAME ${PROJECT_NAME})
 set_property(GLOBAL PROPERTY MCCP_SUPPORT OFF)
 set(MCCP_SUPPORT OFF CACHE BOOL "MCCP protocol support")
 set(PYTHON_SUPPORT ON CACHE  BOOL "Python scripting support")
-set(PERL_SUPPORT ON CACHE  BOOL "Perl scripting support")
+set(PERL_SUPPORT OFF CACHE  BOOL "Perl scripting support")
 set(RUBY_SUPPORT OFF CACHE  BOOL "Ruby scripting support")
 
 if (MCCP_SUPPORT)
@@ -146,7 +146,7 @@ string(REGEX MATCH "[0-9.]+"  APP_VERSION_SHORT ${APP_VERSION_DEF})
 message("Version of application is ${APP_VERSION_DEF}, short is ${APP_VERSION_SHORT}")
 
 if (WIN32 OR APPLE)
-    set(QTDIR "" CACHE PATH "Qt root dir")
+    set(QTDIR "D:\\Qt\\Qt5.6.0\\5.6\\msvc2015" CACHE PATH "Qt root dir")
     set(CMAKE_PREFIX_PATH
 	    ${QTDIR}
 	    ${QTDIR}/bin
@@ -250,7 +250,7 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
     endif()
 endif()
 
-add_executable(${PROJECT_NAME} ${GUI_TYPE} ${SRCS} ${HDR} ${RCC_FILE} ${INCLUDE_LIST_FORMS} ${MAIN_UI_RC})
+add_executable(${PROJECT_NAME} ${SRCS} ${HDR} ${RCC_FILE} ${INCLUDE_LIST_FORMS} ${MAIN_UI_RC})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Xml Qt5::Network Qt5::Multimedia)
 if (MCCP_SUPPORT)
     target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
@@ -305,10 +305,10 @@ if (APPLE)
     install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/qt.conf.macos
             DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app/Contents/Resources/ RENAME qt.conf)
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud/hi32-app-xpertmud.icns
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud.src/hi32-app-xpertmud.icns
             DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app/Contents/Resources/)
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud/hi32-app-xpertmud.png
-                  ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud/hi16-app-xpertmud.png
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud.src/hi32-app-xpertmud.png
+                  ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud.src/hi16-app-xpertmud.png
             DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app/Contents/MacOS/icons/)
 
     install(CODE "MESSAGE(\"Qt framework\")")
@@ -325,8 +325,8 @@ if (APPLE)
 else (APPLE)
   if (WIN32)
       install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/)
-      install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud/hi32-app-xpertmud.png
-              ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud/hi16-app-xpertmud.png
+      install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud.src/hi32-app-xpertmud.png
+              ${CMAKE_CURRENT_SOURCE_DIR}/xpertmud.src/hi16-app-xpertmud.png
               DESTINATION ${CMAKE_INSTALL_PREFIX}/icons/)
 
       if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")

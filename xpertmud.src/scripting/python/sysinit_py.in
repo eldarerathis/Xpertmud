@@ -43,7 +43,7 @@ def parseHelp(file):
             found = 1
             line = f.readline()
             while line != "":
-                helpParser.parse(unicode(line))
+                helpParser.parse(str(line))
                 line = f.readline()
             addHelp(helpParser.getNodes())
             break
@@ -55,7 +55,7 @@ def parseHelp(file):
 
 parseHelp("functions.xml")
 parseHelp("topics.xml")
-parseHelp("classes.xml")    
+parseHelp("classes.xml")
 
 isEcho = 1
 localEcho = 1
@@ -118,7 +118,7 @@ def focusedInputLine():
                   
 def statusWindow():
     global __statusWindow
-    if(not globals().has_key('__statusWindow')):
+    if(not '__statusWindow' in globals()):
         __statusWindow = XMTextBufferWindow(0)
     return __statusWindow
 
@@ -430,7 +430,7 @@ def parse(file):
     found = 0
     for dir in [ '.' ] + sys.path:
         try:
-            execfile(dir + "/" + file, globals(), globals())
+            exec(open(dir + "/" + file, globals(), globals()).read())
             found = 1
             break
         except IOError:
@@ -770,7 +770,7 @@ def sendKey(key, ascii):
 
 allWindows = {}
 def getWindow(id):
-    if allWindows.has_key(id):
+    if id in allWindows:
         return allWindows[id]
     else:
         return None
@@ -852,9 +852,9 @@ class XMPlugin (XMWindow):
         id = XM.Plugin_initialize(lib, cls)
         if id < 0:
             return None
-        print id
+        print(id)
         self.setID(id)
-        print self.getID()
+        print(self.getID())
         self.setTitle(title)
         self.register()
 
@@ -878,7 +878,7 @@ class XMConnection:
         return self.id
 
     def getByID(id):
-        if not XMConnection.__instances.has_key(id):
+        if not id in XMConnection.__instances:
             XMConnection.__private = 1
             XMConnection.__instances[id] = XMConnection(id)
             XMConnection.__private = 0
@@ -901,7 +901,7 @@ class XMInputLine:
         return self.id
 
     def getByID(id):
-        if not XMInputLine.__instances.has_key(id):
+        if not id in XMInputLine.__instances:
             XMInputLine.__private = 1
             XMInputLine.__instances[id] = XMInputLine(id)
             XMInputLine.__private = 0
@@ -923,7 +923,7 @@ def dumpError(excInfo):
     excName = re.sub(r'exceptions\.', r'', str(excInfo[0]))
     errStr += excName + ": " + str(excInfo[1]) + "\n"
     
-    print errStr
+    print(errStr)
     XM.showError(errStr)
 
 class RegState:
@@ -936,7 +936,7 @@ reS = RegState()
 
 def __scripting(match):
     if(re.compile(r'^#[^#]').match(match.string)):
-        exec match.string[1:] in globals()
+        exec(match.string[1:], globals())
         return ""
     else:
         return match.string
@@ -946,8 +946,8 @@ def __compose(match):
     global composeBuffer
     if(re.compile(r'^##$').match(match.string)):
         composeBuffer += "\n"
-        print "execing %s" % composeBuffer
-        exec compile(composeBuffer, '<string>', 'exec') in globals()
+        print("execing %s" % composeBuffer)
+        exec(compile(composeBuffer, '<string>', 'exec'), globals())
         composeBuffer = ""
         return ""
     elif(re.compile(r'^##').match(match.string)):
@@ -974,9 +974,9 @@ def __onEasyInput(match):
                    r'([^"][^ ]*))\s*') # wordswithoutspaces
     m = r.match(str)
     if m != None:
-        print m.groups()
-        print m.group(1)
-        print m.group(2)
+        print(m.groups())
+        print(m.group(1))
+        print(m.group(2))
         if (m.group(2) != None) or (m.group(6) != None):
             command += m.group(1)
         else:
@@ -985,7 +985,7 @@ def __onEasyInput(match):
         m = r.match(str)
     
     while m != None:
-        print m.groups()
+        print(m.groups())
         command += ', '
         if (m.group(2) != None) or (m.group(6) != None):
             command += m.group(1)
@@ -995,7 +995,7 @@ def __onEasyInput(match):
         m = r.match(str)
 
     command += ")\n"
-    print "execing %s" % command
-    exec command in globals()
+    print("execing %s" % command)
+    exec(command, globals())
     
     

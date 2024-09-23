@@ -1,4 +1,4 @@
-print "in bt3030.py (2)"
+print("in bt3030.py (2)")
 
 latestContact = None
 

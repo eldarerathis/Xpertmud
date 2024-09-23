@@ -1,22 +1,21 @@
-cmake_minimum_required ( VERSION 3.0.2 )
+cmake_minimum_required ( VERSION 3.5 )
 
-#we use Python 2.x
-set(Python_ADDITIONAL_VERSIONS 2.7 2.6)
+#we use Python 3.9
+set(Python_ADDITIONAL_VERSIONS 3.9)
 
-include(FindPythonInterp)
-include(FindPythonLibs)
+find_package (Python COMPONENTS Interpreter Development)
 include(FindRuby)
 include(FindPerl)
 include(FindPerlLibs)
 
 #PYTHON_LIBRARY and PYTHON_INCLUDE_DIR can be set for specify the installation of Python to use
 if(PYTHON_SUPPORT)
-    if (NOT PYTHONLIBS_FOUND)
+    if (NOT Python_Development_FOUND)
         message(WARNING "Python not found, disable plugin build")
-    else (NOT PYTHONLIBS_FOUND)
+    else (NOT Python_Development_FOUND)
         message(STATUS "Enable Python support")
         add_subdirectory(python)
-    endif (NOT PYTHONLIBS_FOUND)
+    endif (NOT Python_Development_FOUND)
 endif(PYTHON_SUPPORT)
 
 find_package(Perl 5.0)

@@ -59,6 +59,24 @@ XMPython::~XMPython() {
   }
 }
 
+static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "XM",     /* m_name */
+        "This is a module",  /* m_doc */
+        -1,                  /* m_size */
+        XM_Methods,          /* m_methods */
+        NULL,                /* m_reload */
+        NULL,                /* m_traverse */
+        NULL,                /* m_clear */
+        NULL,                /* m_free */
+    };
+
+static PyObject*
+PyInit_XM(void)
+{
+    return PyModule_Create(&moduledef);
+}
+
 void XMPython::setCallback(GuiScriptingBindings *cB) {
   qDebug("Setting callback");
 
@@ -71,13 +89,14 @@ void XMPython::setCallback(GuiScriptingBindings *cB) {
   // now create all those python resources needed...
   PyObject *module;
 
+  PyImport_AppendInittab("XM", &PyInit_XM);
+
   Py_Initialize();
 
-
-  Py_InitModule(const_cast<char*>("XM"), XM_Methods);
-
-  module = PyImport_AddModule(const_cast<char*>("__main__"));
+  module = PyImport_ImportModule((char*)"XM");
   globals = PyModule_GetDict(module);
+  assert(module != NULL);
+  assert(globals != NULL);
   Py_INCREF(globals);
 
   PyObject *obj;
@@ -182,7 +201,7 @@ bool XMPython::keyPressed(const QString & key, const QString & ascii) {
 
   int ret = 0;
   if(result != NULL) {
-    ret = (int)PyInt_AsLong(result);
+    ret = (int)PyLong_AsLong(result);
     Py_DECREF(result);
   }
 
@@ -216,7 +235,7 @@ void XMPython::timer() {
     (globals, const_cast<char *>("wrap_onTimer"));
 
   if(fn == NULL) {
-    cout << "didn't find timer" << endl;
+    //cout << "didn't find timer" << endl;
     return;
   }
 
@@ -347,7 +366,7 @@ QVariant XMPython::pluginCall(int id, int function, const QVariant & args) {
   char *retString;
   QString ret = "";
   if(result != NULL) {
-    retString = PyString_AsString(result);
+    retString = PyBytes_AsString(result);
     if(retString != NULL)
       ret = retString;
     Py_DECREF(result);

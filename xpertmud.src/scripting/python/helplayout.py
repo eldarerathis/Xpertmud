@@ -220,7 +220,7 @@ class helplayout:
             
 
     def generate(self, node, prefix=u"", call=u"", depth=0, cwhite=0):
-        if type(node) == unicode:
+        if type(node) == str:
             if self.mode == 'docbook':
                 return XMXmlNode("").escape(node)
             else:
@@ -252,7 +252,7 @@ class helplayout:
                 s += self.generate(c, prefix, call, depth, 1)
         elif node.getTagName() == "alt":
             for c in node.getChilds():
-                if not type(c) == unicode:
+                if not type(c) == str:
                     s += self.generate(c, prefix, call, depth)
         elif node.getTagName() == "description":
             if len(node.getSubNodes("para")) == 0:
@@ -270,7 +270,7 @@ class helplayout:
                     self.plainSpace = 1
             else:
                 for c in node.getChilds():
-                    if type(c) == unicode or c.getTagName() == "para":
+                    if type(c) == str or c.getTagName() == "para":
                         if self.mode == 'docbook':
                             s += "<para>"
                     if self.mode == 'docbook':
@@ -278,12 +278,12 @@ class helplayout:
                     elif self.mode == 'plain':
                         s += self.generate(c, prefix, call, depth)
                         if (c != node.getChilds()[len(node.getChilds())-1] and
-                            not type(c) == unicode and
+                            not type(c) == str and
                             c.getTagName() == "para"):
                             s += "\n"
                             self.plainSpace = 1
 
-                    if type(c) == unicode or c.getTagName() == "para":
+                    if type(c) == str or c.getTagName() == "para":
                         if self.mode == 'docbook':
                             s += "</para>"
         elif node.getTagName() == "code":
@@ -316,7 +316,7 @@ class helplayout:
             for c in node.getChilds():
                 s += self.generate(c, prefix, call, depth)
             if self.mode == 'plain':
-                s += ansicolors.end();
+                s += ansicolors.end()
         else:
             for c in node.getChilds():
                 s += self.generate(c, prefix, call, depth)
