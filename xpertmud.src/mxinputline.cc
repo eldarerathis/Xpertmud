@@ -24,6 +24,8 @@ MXInputLine::MXInputLine(const QString &/* unused: string*/, QWidget *parent, co
   QPlainTextEdit(parent),bufferPtr(0),
   command_retention(true), id(0)
 {
+  setFont(QFont(font().family(), 12));
+
   setObjectName(name);
   //setTextFormat(Qt::PlainText);
   setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);

@@ -472,11 +472,12 @@ QColor TextBufferView::getBGColor(ColorChar &cc) {
 
 void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
 #ifndef NODRAWING
-  QRect rect(x*fontW, y*fontH, fontW, fontH);
-
   int bufX = x + offsetX;
   int bufY = y + offsetY;
   ColorChar cc = textBuffer->getBufferChar(bufX, bufY);
+
+  int charW = QFontMetrics(font()).width(cc.getChar());
+  QRect rect(x*charW+24, y*fontH, charW, fontH);
 
   if (selecting && 
       ((bufY>selStartY && bufY<selEndY) || // Line in between
@@ -495,7 +496,7 @@ void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
     charCache.clear();
     if(maxCache > 0) {
       // allways use the max. size if set
-      QPixmap tmpPix(fontW * maxCache, fontH);
+      QPixmap tmpPix(charW * maxCache, fontH);
       QPainter pntr(&tmpPix);
       pntr.setBackgroundMode(Qt::OpaqueMode);
       pntr.drawPixmap(0, 0, charCachePixmap);
@@ -503,7 +504,7 @@ void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
       charCachePixmap = tmpPix;
     } else {
       // start with 30 and expand
-      QPixmap tmpPix(fontW * 30, fontH);
+      QPixmap tmpPix(charW * 30, fontH);
       QPainter pntr(&tmpPix);
       pntr.setBackgroundMode(Qt::OpaqueMode);
       pntr.drawPixmap(0,0, charCachePixmap);
@@ -518,7 +519,7 @@ void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
     //qDebug() << QString("Creating cache entry... %1").arg(nextCachePoint);
     unsigned int offset = nextCachePoint;
 
-    if((nextCachePoint+1) * fontW > (unsigned int)charCachePixmap.width()) {
+    if((nextCachePoint+1) * charW > (unsigned int)charCachePixmap.width()) {
       //qDebug() << QString("not enough space %1 vs %2").arg((nextCachePoint+1) * fontW).arg(charCachePixmap.width());
 
       // => not enough space in the pixmap
@@ -526,10 +527,10 @@ void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
       if(maxCache > 0) {
     //qDebug("limit");
     // there is a cache limit
-        if((nextCachePoint+1) * fontW < (unsigned int)maxCache * fontW) {
+        if((nextCachePoint+1) * charW < (unsigned int)maxCache * charW) {
           //qDebug() << QString("resizing to %1 (vs %2)").arg(maxCache * fontW).arg((nextCachePoint+1) * fontW);
           // but it's not full yet (perhaps a width change)
-          QPixmap tmpPix(maxCache * fontW, charCachePixmap.height());
+          QPixmap tmpPix(maxCache * charW, charCachePixmap.height());
           QPainter pntr(&tmpPix);
           pntr.setCompositionMode(QPainter::CompositionMode_Source);
           pntr.drawPixmap(0,0, charCachePixmap);
@@ -620,8 +621,8 @@ void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
 
 
     //charPaint.eraseRect(offset * fontW, 0, fontW, fontA);
-    charPaint.eraseRect(offset * fontW, 0, fontW, fontH);
-    charPaint.drawText(offset * fontW, fontA, cc.getChar());
+    charPaint.eraseRect(offset * charW, 0, charW, fontH);
+    charPaint.drawText(offset * charW, fontA, cc.getChar());
     charPaint.end();
     //qDebug() << offset * fontW <<  fontA << cc.getChar();
   }
@@ -630,8 +631,8 @@ void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
   QPainter painter(pd);
   painter.setCompositionMode(QPainter::CompositionMode_Source);
   //workaround about space criple
-  if (cc.getChar().isSpace()) painter.fillRect(rect.x()+leftBorderWidth, rect.y(), fontW, fontH, getBGColor(cc));
-  else painter.drawPixmap(rect.x()+leftBorderWidth, rect.y(), charCachePixmap, it->second * fontW , 0, fontW, fontH);
+  if (cc.getChar().isSpace()) painter.fillRect(rect.x()+leftBorderWidth, rect.y(), charW, fontH, getBGColor(cc));
+  else painter.drawPixmap(rect.x()+leftBorderWidth, rect.y(), charCachePixmap, it->second * charW , 0, charW, fontH);
   painter.end();
   //qDebug() << QString(cc.getChar()) << int(cc.getChar().toLatin1());
 /*
