@@ -107,6 +107,9 @@ void TextBuffer::printRaw(const QString& text) {
   for(int i=0; i<text.length(); ++i) {
     insertOneChar(text.at(i), minX, maxX, minY, maxY);
   }
+
+  logToFile(text);
+
   //  qDebug(QString("Emitting (%1, %2) [%3, %4]")
   // .arg(minX).arg(minY).arg(maxX+1-minX).arg(maxY+1-minY));
 
@@ -124,6 +127,33 @@ void TextBuffer::print(const QString& text) {
 
   // once the ansi parser can handle QString
   // print(std::string(text.latin1()));
+}
+
+void TextBuffer::logToFile(const QString& text) {
+    // FIXME
+    std::string stripped_text = text.toStdString();
+    // Make sure this is text going to the main status window
+    //std::cout << "Char's parent: " << parent_id << std::endl;
+    if ( ( logging ) ) { // && ( parent_id == 0 ) ) {
+      if (lfile) {
+          logFile << stripped_text << std::flush;
+      } else {
+          QDir homeDir = QDir::home();
+          QDir dotxpm = QDir(QDir::homePath() + "/.xpertmud");
+          if (!homeDir.exists(".xpertmud")) {
+              std::cout << "Creating ~/.xpertmud/" << std::endl;
+              homeDir.mkdir(".xpertmud");
+          }
+          std::string fpath = QDir::homePath().toStdString() + "/.xpertmud/" + xdt.toStdString() + ".log";
+          std::cout << "Logging path: " << fpath << std::endl;
+          logFile.open(fpath);
+          lfile = true;
+          logFile << stripped_text << std::flush;
+      }
+    } else if ( ( !logging ) && ( lfile ) ) {
+        logFile.close();
+        lfile = false;
+    }
 }
 
 //void TextBuffer::printRaw(const std::string& text) {
@@ -248,6 +278,8 @@ void TextBuffer::newline() {
       scrollLines(1);
     }
   }
+
+  logToFile("\n");
 }
 
 void TextBuffer::tab() {

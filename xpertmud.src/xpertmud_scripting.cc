@@ -459,6 +459,7 @@ int Xpertmud::XM_TextBufferWindow_initialize() {
   neuWrapper->setFocusPolicy(Qt::NoFocus);
   neuWrapper->removeEventFilterForAllChildren();
   neu->buffer()->setMaxBufferSize(scrollbacksize);
+  neu->buffer()->setLoggingEnabled(logging);
 
 //#pragma warning TODO
   connect(this,SIGNAL(colorConfigChanged()),
@@ -471,6 +472,9 @@ int Xpertmud::XM_TextBufferWindow_initialize() {
 //#pragma warning TODO
   connect(this,SIGNAL(defaultFontConfigChanged(const QFont &)),
 	  neu,SLOT(slotNewDefaultFont(const QFont &)));
+
+  connect(this,SIGNAL(loggingEnabled(bool)),
+    neu->buffer(),SLOT(setLoggingEnabled(bool)));
 
   addWindow(neuWrapper, QextMdi::Hide);
 

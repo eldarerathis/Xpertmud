@@ -5,6 +5,7 @@
 #include <klocale.h>
 #include <QTextCodec>
 #include <QDateTime>
+#include <QTcpSocket>
 #include <cassert>
 //#include <ksock.h>
 
@@ -268,16 +269,23 @@ void Connection::slotConnectionClosed() {
 
 void Connection::slotError(int /* e */) {
   //  cout << "Error while connecting: " << e << endl;
-  QString errorString =
-    KExtendedSocket::strError(socket.status(),
-			      socket.systemError());
+  switch (socket.status())
+  {
+    case QAbstractSocket::RemoteHostClosedError:
+      emit received("\n\033[33mConnection closed by server\n\033[0m", id);
+      break;
+    default:
+      QString errorString =
+        KExtendedSocket::strError(socket.status(),
+                socket.systemError());
 
-  KMessageBox::error((QWidget*)parent(),
-		     i18n("Error In Connection:\n%1, %2\n%3")
-		     .arg(socket.host())
-		     .arg(socket.port())
-		     .arg(errorString),
-		       i18n("Error !"));
+      KMessageBox::error((QWidget*)parent(),
+            i18n("Error In Connection:\n%1, %2\n%3")
+            .arg(socket.host())
+            .arg(socket.port())
+            .arg(errorString),
+              i18n("Error !"));
+  }
 
   slotConnectionClosed();
 }

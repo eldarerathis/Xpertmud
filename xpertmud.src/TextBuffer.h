@@ -2,11 +2,13 @@
 #ifndef TEXTBUFFER_H
 #define TEXTBUFFER_H
 
+#include <qdatetime.h>
 #include <QObject>
 #include <QString>
 #include <vector>
 #include <deque>
 #include <assert.h>
+#include <fstream>
 
 // cut this when unicode enabled
 #include <string>
@@ -52,6 +54,8 @@ public:
    * ansi codes, etc)
    */
   virtual void print(const QString& text);
+
+  virtual void logToFile(const QString & text);
 
   virtual void setBGColor(int c) { currentAttributes.setBg(c); }
   virtual void setFGColor(int c) { currentAttributes.setFg(c); }
@@ -140,6 +144,10 @@ public slots:
     maxBufferSize = size;
   }
 
+  void setLoggingEnabled(bool enabled) {
+    logging = enabled;
+  }
+
 signals:
   void textChanged(int column, int line,
 		   unsigned int width, unsigned int height);
@@ -155,6 +163,12 @@ signals:
   void frontCut(int);
 
 protected:
+  bool logging = false;
+  bool lfile = false;
+  QString xdt = QDateTime::currentDateTime().toString("dd-MM-yyyy-h-m");
+  std::string fname;
+  std::ofstream logFile;
+  
   void init(unsigned int initialWidth,
 	    unsigned int initialHeight,
 	    int wordWrapColumn);

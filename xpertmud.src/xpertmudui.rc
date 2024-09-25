@@ -24,6 +24,7 @@
     <Action name="toggle_inputbar" />
     <Action name="toggle_statusbar" />
     <Action name="toggle_quickbar" />
+    <Action name="toggle_logging" />
     <Separator />
     <Action name="edit_toolbars" />
     <Action name="preferences" />

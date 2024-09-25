@@ -232,6 +232,7 @@ private slots:
   void windowMenuAboutToShow();
   void scriptingMenuAboutToShow();
   void slotStatusMsg(const QString &text);
+  void slotLoggingMsg(const QString &text);
   
   /** toggles the toolbar
    */
@@ -246,6 +247,10 @@ private slots:
   void slotViewStatusBar();
 
   void slotViewQuickBar();
+
+  /** toggles session logging
+   */
+  void slotToggleLogging();
   
   /** closes all documents and quits the application.*/
   void slotFileQuit();
@@ -267,6 +272,7 @@ private slots:
   void slotEditToolbars();
   void slotNewToolbarConfig();
   void slotConfigure();
+  void slotHelpAboutApp();
   
   // ScriptingMouseEvent stuff
 private slots:
@@ -306,9 +312,11 @@ signals:
   void historyConfigChanged(unsigned int lines);
   void echoMode(bool);
   void commandRetention(bool);
+  void loggingEnabled(bool);
   void defaultFontConfigChanged(const QFont & font);
 
 private:
+  KAboutData aboutData;
   KLibrary *currentLib; // to get rid of it
 
   /** the configuration object of the application */
@@ -346,9 +354,11 @@ private:
   KToggleAction* viewInputBar;
   KToggleAction* viewStatusBar;
   KToggleAction* viewQuickBar;
+  KToggleAction* toggleLogging;
   KToggleAction* echoModeAction;
   KActionMenu* windowMenu;
   KActionMenu* scriptingMenu;
+  KAction* helpAboutApp;
 
   // Non-GUI Objects
   XMScripting *scriptInterp;
@@ -369,6 +379,7 @@ private:
   int bytesWritten;
   int bytesReceived;
   bool command_retention;
+  bool logging;
 };
 
 #endif

@@ -8,7 +8,7 @@
 #include <qsystemdetection.h>
 
 #define APP_NAME  "Xpertmud"
-#define APP_VERSION  "3.3.1-rolling"
+#define APP_VERSION  "3.4.0"
 
 
 #ifdef Q_OS_UNIX

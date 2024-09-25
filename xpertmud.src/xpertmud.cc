@@ -24,8 +24,10 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QShortcut>
+#include <QMessageBox>
 
 // include files for KDE
+#include <kaboutdata.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
 #include <kmenubar.h>
@@ -59,6 +61,8 @@
 #include "LogToFile.h"
 
 #include <iostream>
+#include <utility>
+#include <vector>
 using std::cout;
 using std::endl;
 
@@ -213,6 +217,20 @@ Xpertmud::Xpertmud(QWidget *parent, const char *name) :
   bytesReceived(0),
   command_retention(false)
 {
+  aboutData = KAboutData( "xpertmud", I18N_NOOP("Xpertmud"),
+			VERSION, I18N_NOOP("Xpertmud"), KAboutData::License_GPL,
+			"(c) 2001, 2002, 2003 Ernst Bachmann & Manuel Klimek<br>"
+			"(c) 2003-2024 The xpertmud developers", 0, 0, 
+			0); // TODO: fill in addr for bugreports, etc
+
+  aboutData.addAuthor("Manuel Klimek",0,"klimek@box4.net");
+  aboutData.addAuthor("Ernst Bachmann",0,"e.bachmann@xebec.de");
+
+ // TODO: get peters new email address.
+  aboutData.addAuthor("Peter Triller",0,"ptriller@xebec.de");
+ // TODO: add other Authors here as well.
+  aboutData.addAuthor("Dmitry Komissarov",0,"aunoor@gmail.com");
+  aboutData.addAuthor("Carter Dewey",0,"eldarerathis@gmail.com");
 
   setMinimumSize(800,600);
 
@@ -334,6 +352,7 @@ bool Xpertmud::queryClose() {
 
 void Xpertmud::initStatusBar() {
   statusBar()->insertItem(i18n("Ready."),1,0);
+  statusBar()->insertItem(i18n("Logging: Off"),7,0);
 
   statusBar()->insertItem(i18n("Sent:"),2,0,true);
   // the static arg(0) makes sense! Only translate once :)
@@ -381,11 +400,17 @@ void Xpertmud::initActions() {
   viewQuickBar = KStdAction::showToolbar(this, SLOT(slotViewQuickBar()), actionCollection(), "toggle_quickbar");
   viewQuickBar->setToolTip(i18n("Enables/disables the MDI bar"));
 
+  toggleLogging = new KToggleAction(i18n("Enable &Logging"),0,this, SLOT(slotToggleLogging()), actionCollection(), "toggle_logging");
+  toggleLogging->setToolTip(i18n("Turn session logging on or off"));
+
   configureToolbars = KStdAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection(),"edit_toolbars");
   configureToolbars->setToolTip(i18n("Configure the toolbar"));
 
   preferences = KStdAction::preferences(this, SLOT(slotConfigure()), actionCollection(), "preferences");
   preferences->setToolTip(i18n("Configure the application"));
+
+  helpAboutApp = KStdAction::aboutApp(this, SLOT(slotHelpAboutApp()), actionCollection(), "help_about_app");
+  helpAboutApp->setToolTip(i18n("About the application"));
 
   windowTile = new KAction(i18n("&Tile"), 0, this, SLOT(slotWindowTile()), actionCollection(),"window_tile");
   windowCascade = new KAction(i18n("&Cascade"), 0, this, SLOT(slotWindowCascade()), actionCollection(),"window_cascade");
@@ -694,6 +719,12 @@ void Xpertmud::slotStatusMsg(const QString &text) {
   statusBar()->changeItem(text,1);
 }
 
+void Xpertmud::slotLoggingMsg(const QString &text) {
+	// Show whether or not we're logging (default = off)
+	statusBar()->clear();
+	statusBar()->changeItem(text,7);
+}
+
 void Xpertmud::initView() {
   /*
   ////////////////////////////////////////////////////////////////////
@@ -758,6 +789,21 @@ void Xpertmud::slotViewQuickBar() {
   slotStatusMsg(i18n("Ready."));
 }
 
+void Xpertmud::slotToggleLogging() {
+	if(!toggleLogging->isChecked()) {
+		slotLoggingMsg(i18n("Logging: Off"));
+		logging = false;
+	} else {
+		slotLoggingMsg(i18n("Logging: On"));
+		logging = true;
+	}
+
+  config->setGroup("TextBufferWindows");
+  config->writeEntry("logging",logging);
+
+  emit loggingEnabled(logging);
+}
+
 void Xpertmud::slotWindowTile() {
   //pWorkspace->tile();
 }
@@ -801,6 +847,29 @@ void Xpertmud::slotConfigure() {
       emit defaultFontConfigChanged(defaultFont);
     }
   }
+}
+
+void Xpertmud::slotHelpAboutApp() {
+  QMessageBox msgBox;
+  msgBox.setTextFormat(Qt::RichText); // this does the magic trick and allows you to click the link
+  msgBox.setWindowTitle("About " + aboutData.programName());
+  //msgBox.setIconPixmap(KGlobal::iconLoader()->loadIcon("appIcon", KIcon::SizeMedium));
+  msgBox.setStyleSheet("QLabel{min-width: 520px;}");
+
+  QString authorText = "";
+
+  for (std::pair<QString, QString> author : *(aboutData.authors()))
+  {
+    authorText += QString("%1  (%2)<br>").arg(author.first, author.second);
+  }
+
+  msgBox.setText("<h4 align='center'>" + aboutData.programName() + " v" + APP_VERSION + "</h4>" +
+    "<p align='center'>" + aboutData.copyright() + "</p><br>" +
+    "<p align='center'>" + authorText + "</p>" +
+    "<p align='center'>xpertmud is provided under the " +
+    "<a href='https://www.gnu.org/licenses/old-licenses/gpl-2.0-standalone.html'>GNU General Public License v2.0</a></p>");
+  
+  msgBox.exec();
 }
 
 void Xpertmud::slotEditBookmark() {
@@ -914,6 +983,9 @@ void Xpertmud::readOptions() {
 
   config->setGroup("TextBufferWindows");
   scrollbacksize = config->readNumEntry("history-size",0);
+  logging = config->readBoolEntry("logging",false);
+  toggleLogging->setChecked(logging);
+  slotToggleLogging();
 
   config->setGroup("Scripting");
   defaultLanguage = config->readEntry("defaultLanguage","__DEFAULT__");

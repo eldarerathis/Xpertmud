@@ -2,6 +2,8 @@
 #define KABOUTDATA_H
 
 #include <qstring.h>
+#include <utility>
+#include <vector>
 #ifdef WIN32
 #pragma warning( disable : 4100 )
 #endif
@@ -21,10 +23,16 @@ class KAboutData {
 	     ELicense lic,
 	     const QString& cop,
 	     int, int,
-	       const QString &addr) {}
+	     const QString &addr) {
+
+		cr = cop;
+  }
 
   void addAuthor(const QString& name,
-		   int, const QString & addr) {}
+		   int, const QString & addr) {
+
+	auths.push_back(std::pair<QString, QString>{name, addr});
+  }
   void addCredit(const QString& name,
 		 const QString& work,
 		 const QString& addr,
@@ -32,6 +40,12 @@ class KAboutData {
 
   QString programName() const { return "xpertmud"; }
   QString version() const { return "Win32"; }
+  QString copyright() const { return cr; }
+  const std::vector<std::pair<QString, QString>>* authors() { return &auths; } 
+
+  private:
+	QString cr;
+	std::vector<std::pair<QString, QString>> auths;
 };
 
 #endif

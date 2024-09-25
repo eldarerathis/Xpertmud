@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include <kcmdlineargs.h>
-#include <kaboutdata.h>
 #include <klocale.h>
 
 #include "xpertmud.h"
@@ -27,11 +26,6 @@
 #include "LogToFile.h"
 
 LogToFile	*myLog = 0;
-
-static const char *description =
-	I18N_NOOP("Xpertmud");
-// INSERT A DESCRIPTION FOR YOUR APPLICATION HERE
-
 	
 static KCmdLineOptions options[] =
 {
@@ -44,26 +38,7 @@ int main(int argc, char *argv[])
 {
 	myLog = new LogToFile (1);
 
-  KAboutData aboutData( "xpertmud", I18N_NOOP("Xpertmud"),
-			VERSION, description, KAboutData::License_GPL,
-			"(c) 2001,2002,2003 Ernst Bachmann & Manuel Klimek\n"
-			"(c) 2003-2006 The xpertmud developers", 0, 0, 
-			0); // TODO: fill in addr for bugreports, etc
-
-  aboutData.addAuthor("Manuel Klimek",0, "klimek@box4.net");
-  aboutData.addAuthor("Ernst Bachmann",0, "e.bachmann@xebec.de");
-
- // TODO: get peters new email address.
-  aboutData.addAuthor("Peter Triller",0, "ptriller@xebec.de");
- // TODO: add other Authors here as well.
-
-  /*
-    // We don't have a feedback dialog any more
-  aboutData.addCredit( "Stefan Hundhammer",
-		       I18N_NOOP("the feedback mail dialog"),
-		       "sh@suse.de", "http://www.suse.de/~sh/" );
-  */
-  KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineArgs::init( argc, argv, NULL );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication a;

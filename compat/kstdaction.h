@@ -66,6 +66,12 @@ class KStdAction {
     return new KAction("Save As", 0, receiver, slot,
 		       collection, "save_as");
   }
+
+  static KAction* aboutApp(QObject* receiver, const char* slot,
+          QObject* collection, const QString& name="help_about_app") {
+    return new KAction("About Application", 0, receiver, slot,
+          collection, "help_about_app");
+  }
 };
 
 #endif

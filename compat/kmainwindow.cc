@@ -102,8 +102,9 @@ void KMainWindow::createGUI(QWidget *) {
   KAction *showInputBar = col->findChild<KAction *>("toggle_inputbar");
   KAction *showStatus = col->findChild<KAction *>("toggle_statusbar");
   KAction *showQuickBar = col->findChild<KAction *>("toggle_quickbar");
+  KAction *toggleLogging = col->findChild<KAction *>("toggle_logging");
   KAction *preferences = col->findChild<KAction *>("preferences");
-
+  KAction *helpAboutApp = col->findChild<KAction *>("help_about_app");
 
   KActionMenu *scriptingMenu = col->findChild<KActionMenu *>("scripting_menu");
 
@@ -137,6 +138,7 @@ void KMainWindow::createGUI(QWidget *) {
   if(showInputBar) { showInputBar->plug(options, 0); }
   if(showStatus) { showStatus->plug(options, 0); }
   if(showQuickBar) { showQuickBar->plug(options, 0); }
+  if(toggleLogging) { toggleLogging->plug(options, 0); }
   if(preferences) {
       options->insertSeparator(preferences);
       preferences->plug(options, 0);
@@ -144,6 +146,7 @@ void KMainWindow::createGUI(QWidget *) {
 
   QMenu *help = new QMenu(this);
   help->setTitle("&Help");
+  if (helpAboutApp) { helpAboutApp->plug(help, 0); }
 
   //QMenuBar *menu = new QMenuBar(this);
   QMenuBar * menu = this->menuBar();
