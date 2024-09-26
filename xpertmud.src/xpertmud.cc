@@ -58,8 +58,6 @@
 // debugging includes
 //
 
-#include "LogToFile.h"
-
 #include <iostream>
 #include <utility>
 #include <vector>
@@ -177,11 +175,11 @@ public:
   {
       KLibrary  *myLib = 0;
 
-      myLog->logMsgF ((char*)"Loading Library (%s)\n", libname);
+      qDebug((char*)"Loading Library (%s)\n", libname);
       myLib = KLibLoader::library (libname);
 
       if (myLib == 0)
-          myLog->logMsgF ((char*)"Failed to load (%s)\n", libname);
+          qDebug((char*)"Failed to load (%s)\n", libname);
 
       return myLib;
   }
@@ -190,11 +188,11 @@ public:
   {
       KLibrary  *myLib = 0;
 
-      myLog->logMsgF ((char*)"Loading Global Library (%s)\n", libname);
+      qDebug((char*)"Loading Global Library (%s)\n", libname);
       myLib = KLibLoader::globalLibrary (libname);
 
       if (myLib == 0)
-          myLog->logMsgF ((char*)"Failed to load (%s)\n", libname);
+          qDebug((char*)"Failed to load (%s)\n", libname);
 
       return myLib;
   }

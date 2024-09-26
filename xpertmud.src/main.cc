@@ -22,10 +22,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-
-#include "LogToFile.h"
-
-LogToFile	*myLog = 0;
 	
 static KCmdLineOptions options[] =
 {
@@ -36,8 +32,6 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
-	myLog = new LogToFile (1);
-
   KCmdLineArgs::init( argc, argv, NULL );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
