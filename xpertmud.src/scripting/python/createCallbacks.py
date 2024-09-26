@@ -101,25 +101,21 @@ while line != "":
                     convert += """\
       return NULL;
 """
-                convert += """\
-    } else {
-      PyObject* %sUni;
-      if(PyUnicode_Check(%s)) {
-        %sUni = %s;
-      } else {
-        %sUni = PyUnicode_FromObject(%s);
-      }
-      if(%sUni == NULL) {
+                convert += f"""\
+    }} else {{
+      PyObject* {name}Uni;
+      if(PyUnicode_Check({name})) {{
+        {name}Uni = {name};
+      }} else {{
+        {name}Uni = PyUnicode_FromObject({name});
+      }}
+      if({name}Uni == NULL) {{
         return NULL;
-      }
-      int %sLen = PyUnicode_GET_DATA_SIZE(%sUni) / sizeof(Py_UNICODE);
-      q%s = QString((QChar*)NULL, %sLen);
-      Py_UNICODE* p%s = PyUnicode_AS_UNICODE(%sUni);
-      for(int i=0; i<%sLen; ++i) {
-        q%s[i] = QChar(p%s[i]);
-      }
-    }
-""" % (name, name, name, name, name, name, name, name, name, name, name, name, name, name, name, name)
+      }}
+
+      q{name} = QString::fromWCharArray(PyUnicode_AsWideCharString({name}Uni, NULL));
+    }}
+"""
 
             elif type == 'bool' or type == 'int':
                 callBack += "%s," % name

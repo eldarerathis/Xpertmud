@@ -3,6 +3,10 @@
 
 #include <stdarg.h>
 
+#ifndef WIN32
+#include <unistd.h>
+#endif
+
 class LogToFile 
 {
 public:

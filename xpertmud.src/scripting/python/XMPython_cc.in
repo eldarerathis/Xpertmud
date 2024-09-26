@@ -20,7 +20,6 @@
 #include <kstandarddirs.h>
 #include <qtextcodec.h>
 
-
 // TODO: remove
 #include <iostream>
 using std::cout;
@@ -168,10 +167,8 @@ void XMPython::textEntered(const QString & text) {
   PyObject *arglist;
   PyObject *result;
 
-  Py_UNICODE* pytext = convert(text);
-  arglist = Py_BuildValue(const_cast<char *>("(u#)"),
-			  pytext, text.length());
-  delete[] pytext;
+  arglist = Py_BuildValue(const_cast<char *>("(s)"),
+			  text.toStdString().c_str());
 
   result = PyEval_CallObject(fn, arglist);
   Py_DECREF(arglist);
@@ -188,13 +185,9 @@ bool XMPython::keyPressed(const QString & key, const QString & ascii) {
   PyObject *arglist;
   PyObject *result;
   
-  Py_UNICODE* pykey = convert(key);
-  Py_UNICODE* pyascii = convert(ascii);
-  arglist = Py_BuildValue(const_cast<char *>("(u#u#)"), 
-			  pykey, key.length(), 
-			  pyascii, ascii.length());
-  delete[] pykey;
-  delete[] pyascii;
+  arglist = Py_BuildValue(const_cast<char *>("(ss)"), 
+			  key.toStdString().c_str(), 
+			  ascii.toStdString().c_str());
 
   result = PyEval_CallObject(fn, arglist);
   Py_DECREF(arglist);
@@ -216,10 +209,8 @@ void XMPython::textReceived(const QString & line, int id) {
   PyObject *arglist;
   PyObject *result;
   
-  Py_UNICODE* pyline = convert(line);
-  arglist = Py_BuildValue(const_cast<char *>("(u#i)"), 
-			  pyline, line.length(), id);
-  delete[] pyline;
+  arglist = Py_BuildValue(const_cast<char *>("(si)"), 
+			  line.toStdString().c_str(), id);
 
   result = PyEval_CallObject(fn, arglist);
   Py_DECREF(arglist);
@@ -355,10 +346,8 @@ QVariant XMPython::pluginCall(int id, int function, const QVariant & args) {
   PyObject *result;
   
   QString qargs = args.toString();
-  Py_UNICODE* pyargs = convert(qargs);
-  arglist = Py_BuildValue(const_cast<char *>("(iiu#)"), 
-			  id, function, pyargs, qargs.length());
-  delete[] pyargs;
+  arglist = Py_BuildValue(const_cast<char *>("(iis)"), 
+			  id, function, qargs.toStdString().c_str());
 
   result = PyEval_CallObject(fn, arglist);
   Py_DECREF(arglist);

@@ -1,9 +1,6 @@
 cmake_minimum_required ( VERSION 3.5 )
 
-#we use Python 3.9
-set(Python_ADDITIONAL_VERSIONS 3.9)
-
-find_package (Python COMPONENTS Interpreter Development)
+find_package (Python 3.9 COMPONENTS Interpreter Development)
 include(FindRuby)
 include(FindPerl)
 include(FindPerlLibs)
@@ -13,7 +10,7 @@ if(PYTHON_SUPPORT)
     if (NOT Python_Development_FOUND)
         message(WARNING "Python not found, disable plugin build")
     else (NOT Python_Development_FOUND)
-        message(STATUS "Enable Python support")
+        message(STATUS "Enable Python support: " ${Python_LIBRARY_RELEASE})
         add_subdirectory(python)
     endif (NOT Python_Development_FOUND)
 endif(PYTHON_SUPPORT)

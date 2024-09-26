@@ -23,7 +23,10 @@ QObject* XMPythonFactory::createObject(QObject* parent,
   return new XMPython(parent,name);
 } 
 
-//K_EXPORT_COMPONENT_FACTORY(libxmpythoninterpreter,XMPythonFactory)
+#ifndef WIN32
+K_EXPORT_COMPONENT_FACTORY(libxmpythoninterpreter,XMPythonFactory)
+#else
 extern "C" { __declspec(dllexport) void *init_libxmpythoninterpreter() { return new XMPythonFactory; } }
+#endif
 
 // KInstance *XMPythonFactory::s_instance = 0L;
