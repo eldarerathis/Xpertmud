@@ -570,7 +570,8 @@ def sysinitInitialize():
                   lambda m: ((statusWindow().scrollLines(
                                statusWindow().getLines()-2) and 0) or 1))
 
-    statusWindow().write("""
+    statusWindow().write(f"""
+Python {sys.version}
     
 Welcome to xpertmud
 *******************
