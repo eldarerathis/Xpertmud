@@ -107,21 +107,21 @@ void XmudMapper::slotSaveMap() {
 
 void XmudMapper::slotNewZoneDialog() {
   bool ok = false;
-  QString zonename = QInputDialog::getText("New Zone Name", "Please enter the new zone's name", QLineEdit::Normal, QString::null, &ok, this, 0);
+  QString zonename = QInputDialog::getText("New Zone Name", "Please enter the new zone's name", QLineEdit::Normal, QString(), &ok, this, 0);
   if (ok) {
     emit emitAddZone(&zonename);
   }
 }
 
 void XmudMapper::slotDelZoneDialog() {
-  int btn = QMessageBox::warning(this, "Delete Zone", "You're about to delete the current zone", "OK", "Cancel", QString::null, 1, 1);
+  int btn = QMessageBox::warning(this, "Delete Zone", "You're about to delete the current zone", "OK", "Cancel", QString(), 1, 1);
   if (btn == 0)
     emit emitDelZone();
 }
 
 void XmudMapper::slotRenameZoneDialog() {
   bool ok = false;
-  QString zonename = QInputDialog::getText("Zone New Name", "Please enter the current zone's new name", QLineEdit::Normal, QString::null, &ok, this, 0);
+  QString zonename = QInputDialog::getText("Zone New Name", "Please enter the current zone's new name", QLineEdit::Normal, QString(), &ok, this, 0);
   if (ok) {
     emit emitRenameZone(&zonename);
   }

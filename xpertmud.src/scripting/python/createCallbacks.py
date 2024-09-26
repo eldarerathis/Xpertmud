@@ -157,15 +157,7 @@ while line != "":
         elif functionType == "char":
             functions += "    return Py_BuildValue(const_cast<char *>(\"b\"), ret);\n  }\n\n"
         elif functionType == "QString":
-            functions += """
-    Py_UNICODE* retUni = new Py_UNICODE[ret.length()];
-    {for(int i=0; i<ret.length(); ++i)
-      retUni[i] = ret.at(i).unicode();
-    }
-    return Py_BuildValue(const_cast<char *>(\"u#\"),
-                         retUni, ret.length());
-    delete[] retUni;
-}"""
+            functions += "    return Py_BuildValue(const_cast<char *>(\"s\"), ret.toStdString().c_str());\n  }\n\n"
         elif functionType == "void":
             functions += "    Py_INCREF(Py_None);\n    return Py_None;\n  }\n\n"
         

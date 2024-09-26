@@ -33,7 +33,7 @@ ConfigDialog::~ConfigDialog() {}
 
 
 void ConfigDialog::addColorPage() {
-  QVBox * page = addVBoxPage(i18n("Colors"),QString::null,
+  QVBox * page = addVBoxPage(i18n("Colors"),QString(),
 			     BarIcon("colorize", KIcon::SizeMedium) );
 
   QWidget * colorBox=new QWidget(page);
@@ -74,7 +74,7 @@ void ConfigDialog::addColorPage() {
 
 
 void ConfigDialog::addHistoryPage() {
-  QVBox * page = addVBoxPage(i18n("History"),QString::null,
+  QVBox * page = addVBoxPage(i18n("History"),QString(),
 		     BarIcon("history", KIcon::SizeMedium) );
   QWidget * histBox=new QWidget(page);
   QGridLayout* glay = new QGridLayout( histBox);
@@ -120,7 +120,7 @@ void ConfigDialog::addHistoryPage() {
 }
 
 void ConfigDialog::addScriptingPage() {
-  QVBox * page = addVBoxPage(i18n("Scripting"),QString::null,
+  QVBox * page = addVBoxPage(i18n("Scripting"),QString(),
 		     BarIcon("pencil", KIcon::SizeMedium) );
   QWidget * scriptBox=new QWidget(page);
   QVBoxLayout* lay = new QVBoxLayout( scriptBox );
@@ -142,13 +142,13 @@ void ConfigDialog::addScriptingPage() {
 }
 
 void ConfigDialog::addFontPage() {
-  QVBox * page = addVBoxPage(i18n("Font"),QString::null,
+  QVBox * page = addVBoxPage(i18n("Font"),QString(),
 			     BarIcon("fonts", KIcon::SizeMedium) );
   fontChooser=new KFontChooser(page,"fontChooser",true);
 
 }
 void ConfigDialog::addInputPage() {
-  QVBox * page = addVBoxPage(i18n("Input"),QString::null,
+  QVBox * page = addVBoxPage(i18n("Input"),QString(),
 			     BarIcon("editclear", KIcon::SizeMedium) );
 
   // TODO: layout

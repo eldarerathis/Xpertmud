@@ -378,7 +378,7 @@ public:
    */
   KDockWidget( KDockManager* dockManager, const QString name,
                const QPixmap &pixmap, QWidget* parent = 0L, const QString& strCaption = 0L,
-               const QString& strTabPageLabel = " ",  Qt::WindowFlags f = 0);
+               const QString& strTabPageLabel = " ",  Qt::WindowFlags f = Qt::Widget);
 
   /**
    * Destructs a dockwidget.
@@ -1161,7 +1161,7 @@ public:
    * @param c     KDE class for saving configurations
    * @param group name of section to write to
    */
-  void writeDockConfig( KConfig* c = 0L, QString group = QString::null );
+  void writeDockConfig( KConfig* c = 0L, QString group = QString() );
 
   /**
    * It reads the current dock state from the given section of KConfig.
@@ -1169,7 +1169,7 @@ public:
    * @param c     KDE class for saving configurations
    * @param group name of section to read from
    */
-  void readDockConfig ( KConfig* c = 0L, QString group = QString::null );
+  void readDockConfig ( KConfig* c = 0L, QString group = QString() );
 #endif
 
   /**
@@ -1285,8 +1285,8 @@ public:
   void readDockConfig(QDomElement &base);
 
 #ifndef NO_KDE2
-  void writeDockConfig( KConfig* c = 0L, QString group = QString::null );
-  void readDockConfig ( KConfig* c = 0L, QString group = QString::null );
+  void writeDockConfig( KConfig* c = 0L, QString group = QString() );
+  void readDockConfig ( KConfig* c = 0L, QString group = QString() );
 #endif
 
 
