@@ -170,7 +170,7 @@ void XMPython::textEntered(const QString & text) {
   arglist = Py_BuildValue(const_cast<char *>("(s)"),
 			  text.toStdString().c_str());
 
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   if(result != NULL) {
     Py_DECREF(result);
@@ -189,7 +189,7 @@ bool XMPython::keyPressed(const QString & key, const QString & ascii) {
 			  key.toStdString().c_str(), 
 			  ascii.toStdString().c_str());
 
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
 
   int ret = 0;
@@ -212,7 +212,7 @@ void XMPython::textReceived(const QString & line, int id) {
   arglist = Py_BuildValue(const_cast<char *>("(si)"), 
 			  line.toStdString().c_str(), id);
 
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   if(result != NULL) {
     Py_DECREF(result);
@@ -231,7 +231,7 @@ void XMPython::timer() {
   }
 
   PyObject *result;
-  result = PyEval_CallObject(fn, NULL);
+  result = PyObject_CallObject(fn, NULL);
   if(result != NULL) {
     Py_DECREF(result);
   }
@@ -246,7 +246,7 @@ void XMPython::echo(bool state, int id) {
   PyObject *result;
   
   arglist = Py_BuildValue(const_cast<char *>("(ii)"), state, id);
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   if(result != NULL) {
     Py_DECREF(result);
@@ -262,7 +262,7 @@ void XMPython::connectionEstablished(int id) {
   PyObject *result;
   
   arglist = Py_BuildValue(const_cast<char *>("(i)"), id);
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   if(result != NULL) {
     Py_DECREF(result);
@@ -278,7 +278,7 @@ void XMPython::connectionDropped(int id) {
   PyObject *result;
   
   arglist = Py_BuildValue(const_cast<char *>("(i)"), id);
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   if(result != NULL) {
     Py_DECREF(result);
@@ -295,7 +295,7 @@ void XMPython::mouseDown(int id, int x, int y) {
   PyObject *result;
   
   arglist = Py_BuildValue(const_cast<char *>("(iii)"), id, x, y);
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   
   if(result != NULL) {
@@ -312,7 +312,7 @@ void XMPython::mouseDrag(int id, int x, int y) {
   PyObject *result;
   
   arglist = Py_BuildValue(const_cast<char *>("(iii)"), id, x, y);
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   
   if(result != NULL) {
@@ -329,7 +329,7 @@ void XMPython::mouseUp(int id, int x, int y) {
   PyObject *result;
   
   arglist = Py_BuildValue(const_cast<char *>("(iii)"), id, x, y);
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   
   if(result != NULL) {
@@ -349,7 +349,7 @@ QVariant XMPython::pluginCall(int id, int function, const QVariant & args) {
   arglist = Py_BuildValue(const_cast<char *>("(iis)"), 
 			  id, function, qargs.toStdString().c_str());
 
-  result = PyEval_CallObject(fn, arglist);
+  result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
 
   char *retString;
