@@ -146,7 +146,14 @@ string(REGEX MATCH "[0-9.]+"  APP_VERSION_SHORT ${APP_VERSION_DEF})
 message("Version of application is ${APP_VERSION_DEF}, short is ${APP_VERSION_SHORT}")
 
 if (WIN32 OR APPLE)
-    set(QTDIR "D:\\Qt\\Qt5.6.0\\5.6\\msvc2015" CACHE PATH "Qt root dir")
+    if(NOT DEFINED QTDIR)
+        if(NOT DEFINED $ENV{QTDIR})
+            message(FATAL_ERROR "Must provide '-DQTDIR=<Qt-Install-Path>' or set QTDIR env variable")
+        else()
+            set(QTDIR "$ENV{QTDIR}" CACHE PATH "Qt root dir")
+        endif()
+    endif()
+    message(STATUS "Using Qt installed at ${QTDIR}")
     set(CMAKE_PREFIX_PATH
 	    ${QTDIR}
 	    ${QTDIR}/bin
@@ -171,8 +178,8 @@ find_package(Qt5Multimedia REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)
 
 if (Qt5Widgets_FOUND)
-    if (Qt5Widgets_VERSION VERSION_LESS 5.6.0)
-        message(FATAL_ERROR "Minimum supported Qt5 version is 5.6.0!")
+    if (Qt5Widgets_VERSION VERSION_LESS 5.11.0)
+        message(FATAL_ERROR "Minimum supported Qt5 version is 5.11.0!")
     endif()
 endif(Qt5Widgets_FOUND)
 
