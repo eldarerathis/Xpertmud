@@ -132,8 +132,6 @@ void ConfigDialog::addScriptingPage() {
   lay->addWidget(label);
 
   defaultScriptingBox=new QComboBox(scriptBox);
-  defaultScriptingBox->setEditable(true);
-  defaultScriptingBox->setAutoCompletion(true);
   defaultScriptingBox->setDuplicatesEnabled(false);
   defaultScriptingBox->setEditable(true);
   lay->addWidget(defaultScriptingBox);

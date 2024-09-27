@@ -117,7 +117,7 @@ void QextMdiTaskBarButton::fitText(const QString& origStr, int newWidth)
          }
       }
       QFontMetrics fm = fontMetrics();
-      w = fm.width(s);
+      w = fm.horizontalAdvance(s);
       newLetterCount--;
    }
 

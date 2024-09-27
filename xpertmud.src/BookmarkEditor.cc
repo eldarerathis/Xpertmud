@@ -314,7 +314,7 @@ void BookmarkEditor::slotAddConnection() {
 				     << defaultHost
 				     << QString::number(defaultPort)
 				     << defaultEnc);
-  connectionList->setItemSelected(i, true);
+  i->setSelected(true);
 }
 
 void BookmarkEditor::slotDeleteConnection() {

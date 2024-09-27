@@ -476,7 +476,7 @@ void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
   int bufY = y + offsetY;
   ColorChar cc = textBuffer->getBufferChar(bufX, bufY);
 
-  int charW = QFontMetrics(font()).width(cc.getChar());
+  int charW = QFontMetrics(font()).horizontalAdvance(cc.getChar());
   QRect rect(x*charW+24, y*fontH, charW, fontH);
 
   if (selecting && 
@@ -630,6 +630,8 @@ void TextBufferView::drawChar(QPaintDevice* pd, int x, int y) {
   //qDebug() << QString("bitblitting %1").arg(it->second);
   QPainter painter(pd);
   painter.setCompositionMode(QPainter::CompositionMode_Source);
+  // If we're at the first character of the row, paint the background for the empty space we use as padding
+  if (x == 0) painter.fillRect(0, rect.y(), 26, fontH, getBGColor(cc));
   //workaround about space criple
   if (cc.getChar().isSpace()) painter.fillRect(rect.x()+leftBorderWidth, rect.y(), charW, fontH, getBGColor(cc));
   else painter.drawPixmap(rect.x()+leftBorderWidth, rect.y(), charCachePixmap, it->second * charW , 0, charW, fontH);

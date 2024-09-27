@@ -6,6 +6,7 @@
 #include <QTextCodec>
 #include <QDateTime>
 #include <QTcpSocket>
+#include <QElapsedTimer>
 #include <cassert>
 //#include <ksock.h>
 
@@ -227,7 +228,7 @@ void Connection::slotSocketReady() {
   const int maxlen = 1024;
   char text[maxlen];
 
-  QTime timer;
+  QElapsedTimer timer;
   timer.start();
   int readBytes;
   do {

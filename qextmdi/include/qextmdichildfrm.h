@@ -36,6 +36,7 @@
 #include <QDateTime>
 #include <QLayout>
 #include <QEvent>
+#include <QElapsedTimer>
 
 #include "qextmdichildfrmcaption.h"
 
@@ -192,7 +193,7 @@ protected:
    QSize                   m_oldClientMinSize;
    QSize                   m_oldClientMaxSize;
    QLayout::SizeConstraint m_oldLayoutResizeMode;
-   QTime                   m_timeMeasure;
+   QElapsedTimer           m_timeMeasure;
 
 // methods
 public:

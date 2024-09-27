@@ -228,7 +228,7 @@ void QextMdiChildFrmCaption::paintEvent(QPaintEvent *)
 QString QextMdiChildFrmCaption::abbreviateText(QString origStr, int maxWidth)
 {
    QFontMetrics fm = fontMetrics();
-   int actualWidth = fm.width( origStr);
+   int actualWidth = fm.horizontalAdvance( origStr);
 
    int realLetterCount = origStr.length();
    int newLetterCount;
@@ -255,7 +255,7 @@ QString QextMdiChildFrmCaption::abbreviateText(QString origStr, int maxWidth)
          }
       }
       QFontMetrics fm = fontMetrics();
-      w = fm.width(s);
+      w = fm.horizontalAdvance(s);
       newLetterCount--;
    }
    return s;

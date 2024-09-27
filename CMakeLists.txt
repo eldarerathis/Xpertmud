@@ -196,7 +196,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_C_COMPILER_ID MATCHES "Clang") OR (CMA
 endif(MSVC)
 
 add_definitions(-DQT_DLL)
-
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x50600)
 add_definitions(-DNO_KDE)
 add_definitions(-DNO_KDE2)
 add_definitions(-DMAKEDLL_QEXTMDI)
