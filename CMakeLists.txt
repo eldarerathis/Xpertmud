@@ -147,7 +147,7 @@ message("Version of application is ${APP_VERSION_DEF}, short is ${APP_VERSION_SH
 
 if (WIN32 OR APPLE)
     if(NOT DEFINED QTDIR)
-        if(NOT DEFINED $ENV{QTDIR})
+        if(NOT DEFINED ENV{QTDIR})
             message(FATAL_ERROR "Must provide '-DQTDIR=<Qt-Install-Path>' or set QTDIR env variable")
         else()
             set(QTDIR "$ENV{QTDIR}" CACHE PATH "Qt root dir")
@@ -203,7 +203,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_C_COMPILER_ID MATCHES "Clang") OR (CMA
 endif(MSVC)
 
 add_definitions(-DQT_DLL)
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x50600)
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x51100)
 add_definitions(-DNO_KDE)
 add_definitions(-DNO_KDE2)
 add_definitions(-DMAKEDLL_QEXTMDI)

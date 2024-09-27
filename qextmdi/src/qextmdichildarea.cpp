@@ -362,14 +362,12 @@ void QextMdiChildArea::cascadeMaximized()
 
 void QextMdiChildArea::expandVertical()
 {
-   int idx=0;
    QList<QextMdiChildFrm*> list(*m_pZ);
    while(!list.isEmpty()){
       QextMdiChildFrm *lpC=list.first();
       if(lpC->m_state != QextMdiChildFrm::Minimized){
          if(lpC->m_state==QextMdiChildFrm::Maximized)lpC->restorePressed();
          lpC->setGeometry(lpC->x(),0,lpC->width(),height());
-         idx++;
       }
       list.removeFirst();
    }
@@ -378,14 +376,12 @@ void QextMdiChildArea::expandVertical()
 
 void QextMdiChildArea::expandHorizontal()
 {
-   int idx=0;
    QList<QextMdiChildFrm*> list(*m_pZ);
    while(!list.isEmpty()){
       QextMdiChildFrm *lpC=list.first();
       if(lpC->m_state != QextMdiChildFrm::Minimized){
          if(lpC->m_state==QextMdiChildFrm::Maximized)lpC->restorePressed();
          lpC->setGeometry(0,lpC->y(),width(),lpC->height());
-         idx++;
       }
       list.removeFirst();
    }

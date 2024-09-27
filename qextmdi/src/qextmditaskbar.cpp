@@ -294,12 +294,6 @@ void QextMdiTaskBar::layoutTaskBar( int taskBarWidth)
    if( taskBarWidth==0)
       // no width is given
       taskBarWidth = width();
-
-   // calculate current width of all taskbar buttons
-   int allButtonsWidth = 0;
-   foreach(QextMdiTaskBarButton *b, *m_pButtonList){
-      allButtonsWidth += b->width();
-   }
    
    // calculate actual width of all taskbar buttons
    int allButtonsWidthHint = 0;

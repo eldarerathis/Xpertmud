@@ -128,7 +128,7 @@ void CtrlParser::parse(const QString& s) {
       std::cout << std::endl;
     */
     
-    if(state != SNORMAL && *to == (char)0) {
+    if(state != SNORMAL && to->isNull()) {
     } else {
       switch(state) {
       case SNORMAL:
