@@ -279,7 +279,3 @@ void QextMdiChildFrmCaption::slot_moveViaSystemMenu()
    m_pParent->m_bDragging = true;
    m_offset = mapFromGlobal( QCursor::pos());
 }
-
-#ifndef NO_INCLUDE_MOCFILES
-#include "qextmdichildfrmcaption.moc"
-#endif

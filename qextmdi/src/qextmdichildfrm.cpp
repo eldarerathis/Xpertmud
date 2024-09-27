@@ -1234,7 +1234,3 @@ QRect QextMdiChildFrm::mdiAreaContentsRect() const
       return empty;
    }
 }
-
-#ifndef NO_INCLUDE_MOCFILES
-#include "qextmdichildfrm.moc"
-#endif

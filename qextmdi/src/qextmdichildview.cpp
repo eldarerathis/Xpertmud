@@ -722,8 +722,3 @@ void QextMdiChildView::raise()
    }
    QWidget::raise();
 }
-
-
-#ifndef NO_INCLUDE_MOCFILES
-#include "qextmdichildview.moc"
-#endif

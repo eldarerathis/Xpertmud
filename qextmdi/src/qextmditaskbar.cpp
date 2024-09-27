@@ -359,7 +359,3 @@ void QextMdiTaskBar::resizeEvent( QResizeEvent* rse)
    }
    KToolBar::resizeEvent( rse);
 }
-
-#ifndef NO_INCLUDE_MOCFILES
-#include "qextmditaskbar.moc"
-#endif

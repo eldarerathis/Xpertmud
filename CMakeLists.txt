@@ -199,7 +199,6 @@ add_definitions(-DQT_DLL)
 
 add_definitions(-DNO_KDE)
 add_definitions(-DNO_KDE2)
-add_definitions(-DNO_INCLUDE_MOCFILES)
 add_definitions(-DMAKEDLL_QEXTMDI)
 
 if (MCCP_SUPPORT)

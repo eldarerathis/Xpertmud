@@ -128,9 +128,7 @@ void KDockTabBarPainter::paintEvent( QPaintEvent* )
       p.drawPixmap(0, 0, *buffer, 0, 0, width(), height());
       break;
     case KDockTabBar::TAB_RIGHT:{
-      QMatrix m;
-      m.rotate( -90 );
-      QPixmap xbuffer = buffer->transformed(m);
+      QPixmap xbuffer = buffer->transformed(QTransform().rotate(-90));
       p.drawPixmap(0, 0, xbuffer, 0, 0, width(), height());
       break;
     }
@@ -179,7 +177,7 @@ void KDockTabBarPainter::drawBuffer()
   QPainter paint;
   paint.begin(buffer);
   paint.setBrushOrigin(0,0);
-  paint.fillRect( 0, 0, W, H, QBrush( palette().background() ));
+  paint.fillRect( 0, 0, W, H, QBrush( palette().window() ));
 
   int x = 2;
   int curTab  = tabBar->_currentTab;
@@ -205,15 +203,15 @@ void KDockTabBarPainter::drawBuffer()
     }
 
     if ( mainData->at(k)->pix != 0L && iconShow ){
-      QMatrix m;
+      QTransform t;
       switch ( tabBar->tabPos ){
         case KDockTabBar::TAB_TOP:
           break;
         case KDockTabBar::TAB_RIGHT:
-          m.rotate( 90 );
+          t.rotate( 90 );
           break;
       }
-      paint.drawPixmap( x1+ 11, y1 + 2 , mainData->at(k)->pix->transformed(m) );
+      paint.drawPixmap( x1+ 11, y1 + 2 , mainData->at(k)->pix->transformed(t) );
     }
 
     int ty = ( H + fontMetrics().height() ) / 2 - 2;
@@ -268,7 +266,7 @@ void KDockTabBarPainter::drawBuffer()
 
     // fixed picture for leftTab
     if ( leftTab == (int)k + 1 ){
-      paint.fillRect( x1 + width - 2, 0, 2, H - 1, QBrush( palette().background() ));
+      paint.fillRect( x1 + width - 2, 0, 2, H - 1, QBrush( palette().window() ));
     }
 
     // paint broken left
@@ -276,7 +274,7 @@ void KDockTabBarPainter::drawBuffer()
     {
       int yy = y1;
       int xx = x1 - 2;
-      paint.fillRect( x1, 0, 1, H - 1, QBrush( palette().background() ));
+      paint.fillRect( x1, 0, 1, H - 1, QBrush( palette().window() ));
       paint.setPen( c1 );
       do {
           paint.drawPoint( xx + 2, yy );
@@ -308,16 +306,16 @@ void KDockTabBarPainter::drawBuffer()
     paint.setPen( c2 );
     paint.drawLine( curx + curWidth - 1, 0, curx + curWidth - 1, H-1);
 
-    paint.fillRect( curx + 1, 1, 2, H - 1, QBrush( palette().background() ));
-    paint.fillRect( curx + curWidth - 4, 1, 3, H - 1, QBrush( palette().background() ));
-    paint.fillRect( curx + 1, 1, curWidth - 3, 2, QBrush( palette().background() ));
+    paint.fillRect( curx + 1, 1, 2, H - 1, QBrush( palette().window() ));
+    paint.fillRect( curx + curWidth - 4, 1, 3, H - 1, QBrush( palette().window() ));
+    paint.fillRect( curx + 1, 1, curWidth - 3, 2, QBrush( palette().window() ));
   }
 
   if ( curTabNum == leftTab && curTabNum != 0 )
   {
     int yy = 0;
     int xx = curx;
-    paint.fillRect( curx, 0, 1, H - 1, QBrush( palette().background() ));
+    paint.fillRect( curx, 0, 1, H - 1, QBrush( palette().window() ));
     paint.setPen( c1 );
     do {
         paint.drawPoint( xx + 2, yy );
@@ -338,8 +336,8 @@ void KDockTabBarPainter::drawBuffer()
   {
     int yy = broken == curTabNum ? 0:2;
     int xx = W;
-    paint.fillRect( xx - 2, 0, 2, H - 1, QBrush( palette().background() ) );
-    paint.fillRect( xx - 5, yy + 1, 5, H - 2 - yy, QBrush( palette().background() ) );
+    paint.fillRect( xx - 2, 0, 2, H - 1, QBrush( palette().window() ) );
+    paint.fillRect( xx - 5, yy + 1, 5, H - 2 - yy, QBrush( palette().window() ) );
     paint.setPen( c2 );
     do {
         paint.drawPoint( xx - 2, yy );
@@ -891,23 +889,23 @@ KDockTabBar::KDockTabBar( QWidget * parent, const char * name )
   left_xpm = new QPixmap( 16, 16 );
   QPainter paint;
   paint.begin(left_xpm);
-  paint.fillRect (0,0,16,16, QBrush (palette().background()));
+  paint.fillRect (0,0,16,16, QBrush (palette().window()));
   //style()->drawPrimitive(QStyle::PE_IndicatorArrowLeft, new QStyleOption(), &paint, QRect(0, 0, 16, 16), colorGroup());
     //TODO: Fix draw!
     style()->drawPrimitive(QStyle::PE_IndicatorArrowLeft, new QStyleOption(), &paint);
   paint.end();
 
-  QMatrix m;
-  m.scale( -1, 1 );
-  right_xpm = new QPixmap( left_xpm->transformed(m) );
+  QTransform t;
+  t.scale( -1, 1 );
+  right_xpm = new QPixmap( left_xpm->transformed(t) );
 
-  m.reset();
-  m.rotate( 90 );
-  down_xpm = new QPixmap( left_xpm->transformed(m) );
+  t.reset();
+  t.rotate( 90 );
+  down_xpm = new QPixmap( left_xpm->transformed(t) );
 
-  m.reset();
-  m.scale( 1, -1 );
-  up_xpm = new QPixmap( down_xpm->transformed(m) );
+  t.reset();
+  t.scale( 1, -1 );
+  up_xpm = new QPixmap( down_xpm->transformed(t) );
 /****************************************************************/
 
   tabPos = TAB_TOP;
@@ -967,13 +965,13 @@ void KDockTabBar::paintEvent(QPaintEvent *)
   // paint button line
   switch ( tabPos ){
     case TAB_TOP:
-      paint.fillRect( 0, height()-1, width(), 1, QBrush( palette().background() ));
+      paint.fillRect( 0, height()-1, width(), 1, QBrush( palette().window() ));
       paint.setPen( palette().light().color() );
       paint.drawLine( 0, height()-1, curx, height()-1 );
       paint.drawLine( qMin( curx + curWidth, width() ), height()-1, width() - 1, height()-1 );
       break;
     case TAB_RIGHT:
-      paint.fillRect( width() - 1, 0, 1, height(), QBrush( palette().background() ));
+      paint.fillRect( width() - 1, 0, 1, height(), QBrush( palette().window() ));
       curx = height() - curx;
       paint.setPen( palette().dark().color() );
       paint.drawPoint( width() - 1, height()-1 );
@@ -998,7 +996,7 @@ int KDockTabBar::insertTab( const QString &label, int id, int index )
   KDockTabBar_PrivateStruct* data = new KDockTabBar_PrivateStruct( id, label );
   data->textColor = palette().text().color();
 
-  data->width = 4 + fontMetrics().width( label ) + 14;
+  data->width = 4 + fontMetrics().horizontalAdvance( label ) + 14;
   if( index == -1)
     mainData->append( data );
   else
@@ -1389,7 +1387,7 @@ void KDockTabBar::tabsRecreate()
 {
   for ( int k = 0; k < mainData->count(); k++ ){
     KDockTabBar_PrivateStruct* data = mainData->at(k);
-    data->width = 4 + fontMetrics().width( data->label ) + 14;
+    data->width = 4 + fontMetrics().horizontalAdvance( data->label ) + 14;
     if ( iconShow && data->pix != 0L ) data->width += 16 + 4;
   }
   resizeEvent(0);
@@ -1404,7 +1402,3 @@ const QColor KDockTabBar::textColor( int id )
   }
   return Qt::black;
 }
-
-#ifndef NO_INCLUDE_MOCFILES // for Qt-only projects, because tmake doesn't take this name
-#include "kdocktabctl.moc"
-#endif

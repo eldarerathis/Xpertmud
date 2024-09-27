@@ -171,7 +171,7 @@ void KDockWidgetHeaderDrag::paintEvent( QPaintEvent* )
   QPainter paint;
 
   paint.begin( &drawBuffer );
-  paint.fillRect( drawBuffer.rect(), QBrush( palette().background()) );
+  paint.fillRect( drawBuffer.rect(), QBrush( palette().window()) );
 
   paint.setPen( palette().light().color() );
   paint.drawLine( 1, 3, 1, 2 );
@@ -585,8 +585,8 @@ KDockWidget* KDockWidget::manualDock( KDockWidget* target, DockPosition dockPos,
     if( formerBrotherDockWidget != 0L)
       QObject::connect( newDock->formerBrotherDockWidget, SIGNAL(iMBeingClosed()),
                         newDock, SLOT(loseFormerBrotherDockWidget()) );
-      target->loseFormerBrotherDockWidget();
-    }
+    target->loseFormerBrotherDockWidget();
+  }
   newDock->formerDockPos = target->formerDockPos;
 
   if ( dockPos == KDockWidget::DockCenter )
@@ -1890,8 +1890,4 @@ void KDockArea::resizeEvent(QResizeEvent *rsize)
   }
 }
 
-#endif
-
-#ifndef NO_INCLUDE_MOCFILES // for Qt-only projects, because tmake doesn't take this name
-#include "kdockwidget.moc"
 #endif

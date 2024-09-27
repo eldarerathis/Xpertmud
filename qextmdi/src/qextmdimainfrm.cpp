@@ -1807,7 +1807,3 @@ void QextMdiMainFrm::fakeSDIApplication()
       m_pTaskBar->close();
    m_pTaskBar = 0L;
 }
-
-#ifndef NO_INCLUDE_MOCFILES
-#include "qextmdimainfrm.moc"
-#endif

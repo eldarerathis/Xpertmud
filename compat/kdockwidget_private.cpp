@@ -303,7 +303,7 @@ KDockButton_Private::~KDockButton_Private()
 
 void KDockButton_Private::drawButton( QPainter* p )
 {
-  p->fillRect( 0,0, width(), height(), QBrush(palette().background() ));
+  p->fillRect( 0,0, width(), height(), QBrush(palette().window() ));
   p->drawPixmap( (width() - iconSize().width()) / 2, (height() - iconSize().height()) / 2, icon().pixmap(iconSize()) );
   if ( moveMouse && !isDown() ){
     p->setPen( Qt::white );
@@ -357,7 +357,3 @@ KDockWidgetPrivate::KDockWidgetPrivate()
 KDockWidgetPrivate::~KDockWidgetPrivate()
 {
 }
-
-#ifndef NO_INCLUDE_MOCFILES // for Qt-only projects, because tmake doesn't take this name
-#include "kdockwidget_private.moc"
-#endif
