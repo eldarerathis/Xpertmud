@@ -430,7 +430,7 @@ def parse(file):
     found = 0
     for dir in [ '.' ] + sys.path:
         try:
-            exec(open(dir + "/" + file, globals(), globals()).read())
+            exec(open(dir + "/" + file).read(), globals(), globals())
             found = 1
             break
         except IOError:
