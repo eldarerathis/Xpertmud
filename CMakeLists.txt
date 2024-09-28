@@ -346,6 +346,8 @@ else (APPLE)
                     DESTINATION ${CMAKE_INSTALL_PREFIX}/)
             install(FILES ${QTDIR}/plugins/platforms/qwindowsd.dll
                     DESTINATION ${CMAKE_INSTALL_PREFIX}/plugins/platforms/)
+            install(FILES ${QTDIR}/plugins/styles/qwindowsvistastyled.dll
+                    DESTINATION ${CMAKE_INSTALL_PREFIX}/styles/)
       else(CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
             install(FILES ${QTDIR}/bin/Qt5Widgets.dll
                     ${QTDIR}/bin/Qt5Core.dll
@@ -356,6 +358,8 @@ else (APPLE)
                     DESTINATION ${CMAKE_INSTALL_PREFIX}/)
             install(FILES ${QTDIR}/plugins/platforms/qwindows.dll
                     DESTINATION ${CMAKE_INSTALL_PREFIX}/plugins/platforms/)
+            install(FILES ${QTDIR}/plugins/styles/qwindowsvistastyle.dll
+                    DESTINATION ${CMAKE_INSTALL_PREFIX}/styles/)
       endif (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
 
       install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/qt.conf.macos
