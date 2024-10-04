@@ -39,6 +39,7 @@ public:
 	    const char *slotConnected = NULL,
 	    const char *slotConnectionClosed = NULL,
 	    const char *slotReceived = NULL,
+      const char *slotGMCPDataReceived = NULL,
 	    const char *slotEchoChanged = NULL,
 	    const char *slotBytesReceived = NULL,
 	    const char *slotBytesWritten = NULL);
@@ -49,6 +50,7 @@ public:
 	    const char *slotConnected = NULL,
 	    const char *slotConnectionClosed = NULL,
 	    const char *slotReceived = NULL,
+      const char *slotGMCPDataReceived = NULL,
 	    const char *slotEchoChanged = NULL,
 	    const char *slotBytesReceived = NULL,
 	    const char *slotBytesWritten = NULL,

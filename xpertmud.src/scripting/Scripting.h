@@ -45,6 +45,7 @@ public:
 
   // connection stuff
   virtual void textReceived(const QString & line, int id) = ABSTRACT;
+  virtual void GMCPDataReceived(const QString & data, int id) = ABSTRACT;
   virtual void echo(bool state, int id) = ABSTRACT;
   virtual void connectionEstablished(int id) = ABSTRACT;
   virtual void connectionDropped(int id) = ABSTRACT;

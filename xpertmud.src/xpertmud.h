@@ -303,6 +303,7 @@ private slots:
   void slotConnected(int); // id
   void slotConnectionClosed(int); // id
   void slotReceived(const QString&, int); // text, id
+  void slotGMCPDataReceived(const QString&, int); // data, id
   void slotBytesWritten(int, int); // nr, id
   void slotBytesReceived(int, int); // nr, id
 // TODO: delete  void slotConnectionError(int);

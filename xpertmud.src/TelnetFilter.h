@@ -1,8 +1,10 @@
 #ifndef TELNETFILTER_H
 #define TELNETFILTER_H
 
+#include <functional>
 #include <map>
 #include <string>
+#include <vector>
 using std::multimap;
 using std::pair;
 using std::string;
@@ -18,9 +20,9 @@ class TelnetIacAnswer {
    * filter chain again.
    */
   TelnetIacAnswer(bool doAnswer=false, bool answer=false, 
-                  bool streamTypeChange=false):
+                  bool streamTypeChange=false, std::function<void(SenderIface *)> postExecCallback=nullptr):
     doAnswer(doAnswer), answer(answer), 
-    streamTypeChange(streamTypeChange) {}
+    streamTypeChange(streamTypeChange), postExecCallback(postExecCallback) {}
 
   void operator|=(const TelnetIacAnswer& ret) {
     streamTypeChange |= ret.streamTypeChange;
@@ -29,12 +31,18 @@ class TelnetIacAnswer {
     // the last answer which is or'ed is taken
     if(ret.doAnswer)
       answer = ret.answer;
+
+    if (ret.postExecCallback != nullptr) {
+      callbacks.push_back(ret.postExecCallback);
+    }
   } 
 
   bool doAnswer;
   bool answer;
 
   bool streamTypeChange;
+  std::function<void(SenderIface *)> postExecCallback;
+  std::vector<std::function<void(SenderIface *)>> callbacks;
 };
 
 class TelnetIacCallback {

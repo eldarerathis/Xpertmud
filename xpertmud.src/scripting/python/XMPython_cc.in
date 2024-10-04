@@ -219,6 +219,24 @@ void XMPython::textReceived(const QString & line, int id) {
   }
 }
 
+void XMPython::GMCPDataReceived(const QString & data, int id) {
+  currentCallBack = callBack;
+
+  PyObject *fn = PyDict_GetItemString
+    (globals, const_cast<char *>("wrap_onGMCPDataReceived"));
+  PyObject *arglist;
+  PyObject *result;
+  
+  arglist = Py_BuildValue(const_cast<char *>("(si)"), 
+			  data.toStdString().c_str(), id);
+
+  result = PyObject_CallObject(fn, arglist);
+  Py_DECREF(arglist);
+  if(result != NULL) {
+    Py_DECREF(result);
+  }
+}
+
 void XMPython::timer() {
   currentCallBack = callBack;
 
@@ -245,7 +263,7 @@ void XMPython::echo(bool state, int id) {
   PyObject *arglist;
   PyObject *result;
   
-  arglist = Py_BuildValue(const_cast<char *>("(ii)"), state, id);
+  arglist = Py_BuildValue(const_cast<char *>("(Oi)"), state ? Py_True : Py_False, id);
   result = PyObject_CallObject(fn, arglist);
   Py_DECREF(arglist);
   if(result != NULL) {

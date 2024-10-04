@@ -71,6 +71,10 @@ void XMPerl::textReceived(const QString & line, int id) {
   }
 }
 
+void XMPerl::GMCPDataReceived(const QString & data, int id) {
+  // Not implemented
+}
+
 void XMPerl::timer() {
   if (recursionCounter == 0) {
     // Avoid Timer calls in recursion

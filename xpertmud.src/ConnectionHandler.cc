@@ -6,6 +6,8 @@
 #include "MCCP.h"
 #endif
 
+#include "GMCP.h"
+
 //#include <qwidget.h>
 
 // TODO: use KDEBUG
@@ -38,6 +40,7 @@ int ConnectionHandler::open(const QString& host, int port,
 			     const char *slotConnected,
 			     const char *slotConnectionClosed,
 			     const char *slotReceived,
+           const char *slotGMCPDataReceived,
 			     const char *slotEchoChanged,
 			     const char *slotBytesReceived,
 			     const char *slotBytesWritten) {
@@ -52,7 +55,7 @@ int ConnectionHandler::open(const QString& host, int port,
   --id;
 
   open(id, host, port, onConnect, callback, slotConnected,
-       slotConnectionClosed, slotReceived, slotEchoChanged,
+       slotConnectionClosed, slotReceived, slotGMCPDataReceived, slotEchoChanged,
        slotBytesReceived, slotBytesWritten);
 
   return id;
@@ -64,6 +67,7 @@ void ConnectionHandler::open(int id, const QString& host, int port,
 			     const char *slotConnected,
 			     const char *slotConnectionClosed,
 			     const char *slotReceived,
+           const char *slotGMCPDataReceived,
 			     const char *slotEchoChanged,
 			     const char *slotBytesReceived,
 			     const char *slotBytesWritten,
@@ -93,6 +97,12 @@ void ConnectionHandler::open(int id, const QString& host, int port,
   c->addInputStreamFilter(mccp);
 #endif
 
+#ifdef GMCP_SUPPORT
+  GMCP* gmcp = new GMCP(c, c);
+  gmcp->plug(*telnetFilter);
+  c->addInputStreamFilter(gmcp);
+#endif
+
   c->addInputStreamFilter(telnetFilter);
 
   if(slotConnected != NULL)
@@ -102,6 +112,9 @@ void ConnectionHandler::open(int id, const QString& host, int port,
   if(slotReceived != NULL)
     connect(c, SIGNAL(received(const QString&, int)), 
 	    callback, slotReceived);
+  if(slotGMCPDataReceived != NULL)
+    connect(c, SIGNAL(GMCPDataReceived(const QString&, int)), 
+	    callback, slotGMCPDataReceived);
   if(slotEchoChanged != NULL) {
     connect(collection, SIGNAL(echoChanged(bool)),
 	    c, SLOT(slotEchoChanged(bool)));

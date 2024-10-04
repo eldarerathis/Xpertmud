@@ -14,8 +14,14 @@
 #ifndef TELOPT_COMPRESS2
 # define TELOPT_COMPRESS2 86
 #endif
+#ifndef TELOPT_GMCP
+# define TELOPT_GMCP 201
+#endif
 
+#include <functional>
 #include <iostream>
+#include <QString>
+
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -137,23 +143,30 @@ void TelnetFilter::parse(const string& str) {
       else if(*to == (char)SE && subCommand.size() == 2 &&
 	      subCommand[0] == (char)TELOPT_COMPRESS &&  //***
 	      subCommand[1] == (char)WILL) {          //*** (puking)
-	// support for the broken MCCP v1 protocol :-O
-	state = SNORMAL;
-	if(sendSubCommand()) {
-	  first->parse(string(to+1, str.end()));
-	  return; // everything's parsed now
-	}
-	from = to+1; 
+        // support for the broken MCCP v1 protocol :-O
+        state = SNORMAL;
+        if(sendSubCommand()) {
+          first->parse(string(to+1, str.end()));
+          return; // everything's parsed now
+        }
+        from = to+1; 
+      } else if (*to == (char)SE && subCommand.size() > 0 &&
+        subCommand[0] == (char)TELOPT_GMCP) {
+          state = SNORMAL;
+          if (sendSubCommand()) {
+            first->parse(string(to+1, str.end()));
+            return;
+          }
       } else { subCommand += *to; }
       break;
     case SSB_IAC:
       if(*to == (char)SE) { 
-	state = SNORMAL;
-	if(sendSubCommand()) {
-	  first->parse(string(to+1, str.end()));
-	  return; // everything's parsed now
-	}
-	from = to+1; 
+        state = SNORMAL;
+        if(sendSubCommand()) {
+          first->parse(string(to+1, str.end()));
+          return; // everything's parsed now
+        }
+        from = to+1; 
       } else { subCommand += (char)IAC; subCommand += *to; state = SSB_START; }
       break;
     }
@@ -177,7 +190,7 @@ void TelnetFilter::sendUntil(const string::const_iterator from,
 }
 
 bool TelnetFilter::sendSubCommand() {
-  int iac = subCommand[0];
+  int iac = (unsigned char)subCommand[0];
   mapType::iterator it = iacMap.lower_bound(iac);
   mapType::iterator end = iacMap.upper_bound(iac);
   
@@ -247,183 +260,17 @@ bool TelnetFilter::executeIacCallback(EState state, unsigned char command) {
         retCommand = DONT;
       }
     }
+
     char cmd[] = { (char)retCommand, (char)command };
     sender->sendByte((char)IAC);
     sender->send(cmd, 2);
+
+    if (ret.callbacks.size() > 0) {
+      for (std::function<void(SenderIface *)> callback : ret.callbacks) {
+        callback(sender);
+      }
+    }
   }
 
   return ret.streamTypeChange;
 }
-
-/*
-OLD IMPLEMENTATION!!!
-
-void Xpertmud::slotSocketReady() {
-  while(socket->bytesAvailable()) {
-    int maxlen = socket->size();
-    char* text = new char[maxlen+1];
-
-    if((maxlen = socket->readBlock((char *)text, maxlen)) == -1) {
-      KMessageBox::error(this,i18n("Evil error occured :)"), i18n("Error !"));
-    }
-    text[maxlen] = 0;
-    bytesRead += maxlen;
-
-    inputStreamHandler.parse(text);
-
-
-    unsigned char *from = text;
-    unsigned char *to = text;
-
-    while(to < text + maxlen) {
-      if(*to == IAC) {
-	// send text up to this character
-	if(to > from) {
-	  *to = 0;
-	  if (scriptInterp)
-	    scriptInterp->textReceived(QString((char *)from));
-	  else 
-	    printToStatusWin(QString((char *)from));
-	  *to = 0xff;
-	  from = to;
-	}
-
-	// go on parsing
-	if(++to < text + maxlen) {
-	  if(*to == DONT) {
-	    if(++to < text + maxlen) {
-	      if(*to == TELOPT_ECHO) {
-		if (scriptInterp)
-		  scriptInterp->echo(false);
-		char cmd[] = {IAC,WONT,*to,0};
-		slotSend(cmd, 3);
-	      } else {
-		//cout << "Got some dont command: " << (int)*to << endl;
-		//char cmd[] = {IAC,WONT,*to,0};
-		//slotSend(cmd, 3);
-	      }
-	      ++to;
-	    }
-	  } else if(*to == DO) {
-	    if(++to < text + maxlen) {
-	      if(*to == TELOPT_ECHO) {
-		if (scriptInterp)
-		  scriptInterp->echo(true);
-		char cmd[] = {IAC,WILL,*to,0};
-		slotSend(cmd, 3);
-	      } else if(*to == TELOPT_TTYPE) {
-		char cmd[] = {IAC,WILL,*to,0};
-		slotSend(cmd, 3);
-	      } else {
-		if(*to != TELOPT_AUTHENTICATION &&
-		   *to != TELOPT_ENCRYPT &&
-		   *to != TELOPT_TSPEED &&
-		   *to != TELOPT_XDISPLOC &&
-		   *to != TELOPT_NEW_ENVIRON &&
-		   *to != TELOPT_OLD_ENVIRON &&
-		   *to != TELOPT_LINEMODE &&
-		   *to != TELOPT_NAWS &&
-		   *to != TELOPT_LFLOW &&
-		   *to != TELOPT_TM &&
-		   *to != TELOPT_BINARY) 
-		  cout << "Got some unparsed do command: " 
-		       << (int)*to << endl;
-		char cmd[] = {IAC,WONT,*to,0};
-		slotSend(cmd, 3);
-	      }
-	      ++to;
-	    }
-	  } else if(*to == WONT) {
-	    if(++to < text + maxlen) {
-	      if(*to == TELOPT_ECHO) {
-		//cout << "got wont echo" << endl;
-		if (scriptInterp)
-		  scriptInterp->echo(true);
-		char cmd[] = {IAC,DONT,*to,0};
-		slotSend(cmd, 3);
-	      } else {
-		//cout << "Got some wont command: " << (int)*to << endl;
-	      }
-	      ++to;
-	    }
-	  } else if(*to == WILL) {
-	    if(++to < text + maxlen) {
-	      if(*to == TELOPT_ECHO) {
-		if (scriptInterp)
-		  scriptInterp->echo(false);
-		char cmd[] = {IAC,DO,*to,0};
-		slotSend(cmd, 3);
-
-	      } else if(
-			// ignore some telnet options
-			*to != TELOPT_SGA
-			) {
-		if(*to != TELOPT_ENCRYPT &&
-		   *to != TELOPT_STATUS)
-		  cout << "Got some unparsed will command: " 
-		       << (int)*to << endl;
-		char cmd[] = {IAC,DONT,*to,0};
-		slotSend(cmd, 3);
-	      }
-	      ++to;
-	    }
-	  } else if(*to == SB) {
-	    if(++to < text + maxlen) {
-	      if(*to == TELOPT_TTYPE) {
-		if(++to < text + maxlen) {
-		  if(*to == TELQUAL_SEND) {
-		    if(++to < text + maxlen) {
-		      if(*to == IAC) {
-			if(++to < text + maxlen) {
-			  if(*to == SE) {
-			    char cmd[] = 
-			      {IAC,SB,TELOPT_TTYPE,
-			       TELQUAL_IS,'a','n','s','i',
-			       IAC,SE,0};
-			    slotSend(cmd, 10);
-			  }
-			}
-		      }
-		    }
-		  }
-		}
-	      }
-	    }
-	    while(to < text + maxlen &&
-		  !(*(to-2) != IAC &&
-		    *(to-1) == IAC &&
-		    *(to) == SE)) {
-	      cout << "skipping garbage in SB...SE block" << endl;
-	      ++to;
-	    }
-	    ++to;
-		
-	  } else if(
-		    *to != DM // ignore data mark
-		    ) {
-	    cout << "Got some unparsed command: " 
-		 << (int)*to << "; "
-		 << (int)*(to+1) << "; "
-		 << (int)*(to+2) << "; "
-		 << (int)*(to+3) << "; "
-		 << endl;
-	    // TODO: parse command
-	    ++to;
-	  }
-	}
-	from = to;
-      } else {
-	++to;
-      }
-    }
-    if(to > from) {
-      if (scriptInterp)
-	scriptInterp->textReceived(QString((char *)from));
-      else 
-	printToStatusWin(QString((char *)from));
-    }
-
-    delete[] text;
-  }
-}
-*/

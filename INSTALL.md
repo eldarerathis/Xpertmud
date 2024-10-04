@@ -20,7 +20,8 @@ These CMake vars can be used:
 * QTDIR - set Qt libs root dir on Windows and MacOS.
 * PYTHON_SUPPORT - enable build Python plugin (default ON)
 * PERL_SUPPORT - enable build Perl plugin (default ON)
-* MCCP_SUPPORT - enable support MCCP (default OFF)
+* MCCP_SUPPORT - enable support for MCCP (default OFF)
+* GMCP_SUPPORT - enable support for GMCP (default OFF)
 
 ### Windows
 

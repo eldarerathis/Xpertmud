@@ -2,6 +2,7 @@
 .idea
 .DS_Store
 .vs
+.qt
 cmake-build-debug
 cmake-build-release
 **/Debug/**

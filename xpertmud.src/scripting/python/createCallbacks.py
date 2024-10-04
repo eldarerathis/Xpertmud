@@ -74,7 +74,7 @@ while line != "":
                     pythonSelfArgs += '=' + defaultValue
                 pythonSelfArgs += ','
 
-            readVariables += "    %s %s" % (type, name)
+            readVariables += "    %s %s" % (type if type != "bool" else "int", name)
             if defaultValue != None and type != 'PyObject*':
                 readVariables += " = %s;\n" % defaultValue
             elif type == 'PyObject*':
@@ -117,7 +117,11 @@ while line != "":
     }}
 """
 
-            elif type == 'bool' or type == 'int':
+            elif type == 'bool':
+                callBack += "%s, " % name
+                typeArguments += ", &%s" % name
+                typeString += "p"
+            elif type == 'int':
                 callBack += "%s," % name
                 typeArguments += ", &%s" % name
                 typeString += "i"

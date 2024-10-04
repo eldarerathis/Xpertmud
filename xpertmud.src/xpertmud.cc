@@ -1087,6 +1087,7 @@ int Xpertmud::newConnection(const QString& host, int port,
 			  SLOT(slotConnected(int)),
 			  SLOT(slotConnectionClosed(int)),
 			  SLOT(slotReceived(const QString&, int)),
+        SLOT(slotGMCPDataReceived(const QString&, int)),
 			  SLOT(slotEchoChanged(bool, int)),
 			  SLOT(slotBytesReceived(int, int)),
 			  SLOT(slotBytesWritten(int, int)));
@@ -1102,6 +1103,7 @@ void Xpertmud::slotConnect(int id, const QString& host, int port,
 		   SLOT(slotConnected(int)),
 		   SLOT(slotConnectionClosed(int)),
 		   SLOT(slotReceived(const QString&, int)),
+       SLOT(slotGMCPDataReceived(const QString&, int)),
 		   SLOT(slotEchoChanged(bool, int)),
 		   SLOT(slotBytesReceived(int, int)),
 		   SLOT(slotBytesWritten(int, int)),
@@ -1178,6 +1180,15 @@ void Xpertmud::slotReceived(const QString& text, int id) {
   } else {
     printToStatusWin(text);
   }
+}
+
+void Xpertmud::slotGMCPDataReceived(const QString& text, int id) {
+  if (scriptInterp) {
+    scriptInterp->GMCPDataReceived(text, id);
+  }
+
+  // If there's no script interpreter running, swallow the data. It's not intended
+  // to be printed to the buffer normally
 }
 
 void Xpertmud::slotConnected(int id) {

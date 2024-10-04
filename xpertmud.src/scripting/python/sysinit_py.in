@@ -1,6 +1,7 @@
 from __future__ import nested_scopes
 
 import XM
+import json
 import sys
 import types
 import re
@@ -65,6 +66,7 @@ aliases = []
 keyBindings = []
 timers = []
 delayed = []
+gmcpData = {}
 
 mtime = 0
 
@@ -639,6 +641,8 @@ def onKeyPressed(key, ascii):
     return 0
 
 def onConnectionEstablished(id=0):
+    global gmcpData
+    gmcpData = {}
     statusWindow().write("Connection %d established.\n" % id)
 
 def onConnectionDropped(id=0):
@@ -690,6 +694,11 @@ def onTextReceived(text, id=0):
                 else:
                     linePart = line
 
+def onGMCPDataReceived(text, id=0):
+    global gmcpData
+    gmcp_params = text.split(' ', 1)
+    gmcpData[gmcp_params[0]] = json.loads(gmcp_params[1])
+
 def onEcho(state, id=0):
     global isEcho
     isEcho = state
@@ -728,6 +737,13 @@ def wrap_onTextReceived(line, id=0):
     try:
         if(callable(onTextReceived)):
             onTextReceived(line,id)
+    except:
+        dumpError(sys.exc_info())
+
+def wrap_onGMCPDataReceived(line, id=0):
+    try:
+        if(callable(onGMCPDataReceived)):
+            onGMCPDataReceived(line,id)
     except:
         dumpError(sys.exc_info())
 

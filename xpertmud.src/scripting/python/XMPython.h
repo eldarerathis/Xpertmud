@@ -31,6 +31,7 @@ public:
   
 
   void textReceived(const QString & line, int id);
+  void GMCPDataReceived(const QString & data, int id);
   void echo(bool state, int id);
   void connectionEstablished(int id);
   void connectionDropped(int id);

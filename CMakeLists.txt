@@ -37,6 +37,7 @@ file (GLOB HDR
         xpertmud.src/BookmarkEditor.h
         xpertmud.src/LogToFile.h
         xpertmud.src/MCCP.h
+        xpertmud.src/GMCP.h
         xpertmud.src/config.h
         compat/kaction.h
         compat/kfontdialog.h
@@ -107,6 +108,7 @@ file (GLOB SRCS
         xpertmud.src/Bookmark.cc
         xpertmud.src/BookmarkEditor.cc
         xpertmud.src/MCCP.cc
+        xpertmud.src/GMCP.cc
         xpertmud.src/scripting/Scripting.cc
         )
 
@@ -118,7 +120,9 @@ source_group("Autogen files" FILES ${UI_GEN})
 
 set(MAIN_PROJ_NAME ${PROJECT_NAME})
 set_property(GLOBAL PROPERTY MCCP_SUPPORT OFF)
+set_property(GLOBAL PROPERTY GMCP_SUPPORT OFF)
 set(MCCP_SUPPORT OFF CACHE BOOL "MCCP protocol support")
+set(GMCP_SUPPORT OFF CACHE BOOL "GMCP protocol support")
 set(PYTHON_SUPPORT ON CACHE  BOOL "Python scripting support")
 set(PERL_SUPPORT OFF CACHE  BOOL "Perl scripting support")
 set(RUBY_SUPPORT OFF CACHE  BOOL "Ruby scripting support")
@@ -211,6 +215,10 @@ add_definitions(-DMAKEDLL_QEXTMDI)
 if (MCCP_SUPPORT)
     add_definitions(-DMCCP_SUPPORT)
 endif(MCCP_SUPPORT)
+
+if (GMCP_SUPPORT)
+    add_definitions(-DGMCP_SUPPORT)
+endif(GMCP_SUPPORT)
 
 qt5_wrap_ui(INCLUDE_LIST_FORMS ${UI_FORMS})
 qt5_add_resources(MAIN_UI_RC ${MAIN_RES})

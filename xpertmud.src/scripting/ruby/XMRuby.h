@@ -21,6 +21,7 @@ public:
 
   void timer();
   void textEntered(const QString & text);
+  void GMCPDataReceived(const QString & data, int id);
   bool keyPressed(const QString & key, const QString & ascii);
 
   void textReceived(const QString & line, int id);

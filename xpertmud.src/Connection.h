@@ -58,6 +58,7 @@ signals:
   //   for perl, where it'd take away one encoding step.
   //   let's first see, if it really makes a difference... :-)
   void received(const QString&, int); // text, id
+  void GMCPDataReceived(const QString&, int);
 
   void connected(int); // id
   void connectionClosed(int); // id

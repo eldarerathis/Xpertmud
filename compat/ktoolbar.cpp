@@ -18,7 +18,6 @@ QToolBar(parent) {
 
 void KToolBar::insertWidget(int id, int, QWidget*w, int) {
     cout << "inserted... " << id << endl;
-    cout << "hmmm" << (long)w << endl;
     id2widget.insert(id, w);
     cout << "done" << endl;
     this->addWidget(w);
