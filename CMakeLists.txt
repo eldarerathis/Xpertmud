@@ -265,7 +265,7 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
     endif()
 endif()
 
-add_executable(${PROJECT_NAME} ${SRCS} ${HDR} ${RCC_FILE} ${INCLUDE_LIST_FORMS} ${MAIN_UI_RC})
+add_executable(${PROJECT_NAME} ${SRCS} ${HDR} ${RCC_FILE} ${INCLUDE_LIST_FORMS} ${MAIN_UI_RC} xpertmud.src/icon.rc)
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Xml Qt5::Network Qt5::Multimedia)
 if (MCCP_SUPPORT)
     target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})

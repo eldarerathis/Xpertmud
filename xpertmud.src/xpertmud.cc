@@ -852,19 +852,33 @@ void Xpertmud::slotHelpAboutApp() {
   msgBox.setTextFormat(Qt::RichText); // this does the magic trick and allows you to click the link
   msgBox.setWindowTitle("About " + aboutData.programName());
   //msgBox.setIconPixmap(KGlobal::iconLoader()->loadIcon("appIcon", KIcon::SizeMedium));
-  msgBox.setStyleSheet("QLabel{min-width: 520px;}");
+  msgBox.setStyleSheet("QLabel{min-width: 620px;}");
 
   QString authorText = "";
 
   for (std::pair<QString, QString> author : *(aboutData.authors()))
   {
-    authorText += QString("%1  (%2)<br>").arg(author.first, author.second);
+    authorText += QString("%1 (%2)<br>").arg(author.first, author.second);
   }
 
-  msgBox.setText("<h4 align='center'>" + aboutData.programName() + " v" + APP_VERSION + "</h4>" +
-    "<p align='center'>" + aboutData.copyright() + "</p><br>" +
+#ifdef MCCP_SUPPORT
+  std::string mccp_support = "Yes";
+#else
+  std::string mccp_support = "No";
+#endif
+
+#ifdef GMCP_SUPPORT
+  std::string gmcp_support = "Yes";
+#else
+  std::string gmcp_support = "No";
+#endif
+
+  msgBox.setText("<h3 align='center'>" + aboutData.programName() + " v" + APP_VERSION + "</h3>" +
+    "<h4 align='center'>" + QString("MCCP Support: %1, GMCP Support: %2").arg(mccp_support.c_str()).arg(gmcp_support.c_str()) + "</h4>" +
+    "<p align='center'>" + aboutData.copyright() + "</p>" +
+    "<h4 align='center'>Individual Credits</h4>" +
     "<p align='center'>" + authorText + "</p>" +
-    "<p align='center'>xpertmud is provided under the " +
+    "<p align='center'>xpertmud is provided under the terms of the " +
     "<a href='https://www.gnu.org/licenses/old-licenses/gpl-2.0-standalone.html'>GNU General Public License v2.0</a></p>");
   
   msgBox.exec();
